@@ -1,0 +1,22 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+    overflow: hidden;
+}
+
+.box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.header {
+    padding-top: 40px;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+}
