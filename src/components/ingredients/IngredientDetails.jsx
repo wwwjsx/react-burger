@@ -38,7 +38,7 @@ const IngredientDetails = (props) => {
 };
 
 IngredientDetails.propTypes = {
-    ingredient: CommonPropTypes.ingredientShapeType
+    ingredient: CommonPropTypes.ingredientShapeType.isRequired
 }
 
 export default IngredientDetails;

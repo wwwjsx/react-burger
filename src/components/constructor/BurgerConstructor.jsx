@@ -75,7 +75,7 @@ const BurgerConstructor = (props) => {
 };
 
 BurgerConstructor.propTypes = {
-    ingredients: CommonPropTypes.ingredientsArrayType
+    ingredients: CommonPropTypes.ingredientsArrayType.isRequired
 }
 
 export default BurgerConstructor;

@@ -1,13 +1,13 @@
 import React from 'react';
-import './App.css';
+import styles from './App.module.css';
 import '@ya.praktikum/react-developer-burger-ui-components';
-import AppHeader from './components/header/AppHeader';
-import BurgerConstructor from './components/constructor/BurgerConstructor';
-import BurgerIngredients from './components/ingredients/BurgerIngredients';
-import LoadMask from './components/modal/LoadMask';
-import AlertModal from './components/modal/AlertModal';
-import { INGREDIENTS_URL} from './utils/common/Contstants';
-import { checkResponse } from './utils/Response';
+import AppHeader from '../header/AppHeader';
+import BurgerConstructor from '../constructor/BurgerConstructor';
+import BurgerIngredients from '../ingredients/BurgerIngredients';
+import LoadMask from '../modal/LoadMask';
+import AlertModal from '../modal/AlertModal';
+import { INGREDIENTS_URL} from '../../utils/common/Contstants';
+import { checkResponse } from '../../utils/Response';
 
 function App() {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -32,9 +32,9 @@ function App() {
     }, []);
 
     return (
-        <div className="App">
+        <div className={styles.App}>
             <AppHeader />
-            <div className={'container'}>
+            <div className={`container ${styles.container}`}>
                 <BurgerIngredients ingredients={ingredients}/>
                 <div className={'col-split'}></div>
                 <BurgerConstructor ingredients={ingredients}/>

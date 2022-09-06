@@ -26,7 +26,7 @@ const AlertModal = (props) => {
 
 AlertModal.propTypes = {
     title: PropTypes.string,
-    show: PropTypes.bool,
+    show: PropTypes.bool.isRequired,
     children: PropTypes.node,
     onClose: PropTypes.func
 };
