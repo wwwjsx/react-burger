@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './HeaderLink.module.css';
+import CommonPropTypes from '../../utils/common/PropTypes';
 import {BurgerIcon, ListIcon, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 
 const HeaderLink = (props) => {
@@ -21,5 +22,7 @@ const HeaderLink = (props) => {
         </a>
     );
 };
+
+HeaderLink.propTypes = CommonPropTypes.headerLinkType;
 
 export default HeaderLink;

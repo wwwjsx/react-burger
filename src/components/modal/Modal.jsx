@@ -1,26 +1,64 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
 import {CloseIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import ModalOverlay from './ModalOverlay';
+import PropTypes from 'prop-types';
 
 const Modal = (props) => {
-    const visibility = (props.show === true) ? 'visible' : 'hidden';
     const width = props.width || 500;
     const height = props.height || 500;
-    const closeX = props.closeX || 40;
-    const closeY = props.closeY || 60;
+    const isOpen = props.show;
+    let closeCls = styles.close;
 
-    return ReactDOM.createPortal (
-        <div className={styles.overlay} style={{ visibility }}>
+    if (props.closeCls) {
+        closeCls += ` ${props.closeCls}`;
+    }
+
+    React.useEffect(() => {
+       const handleEsc = (e) => {
+           if (e.key === 'Escape') {
+               props.onClose();
+           }
+       };
+
+       if (isOpen) {
+           document.addEventListener('keydown', handleEsc);
+
+           // component will unmount
+           return () => {
+               document.removeEventListener('keydown', handleEsc);
+           };
+       }
+
+    }, [isOpen]);
+
+    // handler for when clicked on modal overlay
+    const onClickOverlay = (e) => {
+        const overlay = e.target.getAttribute('data-modal-overlay');
+
+        if (overlay) {
+            props.onClose();
+        }
+    };
+
+    return (
+        <ModalOverlay show={props.show} onClick={onClickOverlay}>
             <div className={styles.modal} style={{ width, height }}>
-                <span className={styles.close} style={{ top: closeY, right: closeX }}>
+                <span className={closeCls}>
                     <CloseIcon type="primary" onClick={props.onClose}/>
                 </span>
                 {props.children}
             </div>
-        </div>,
-        document.getElementById('react-modals')
+        </ModalOverlay>
     );
+};
+
+Modal.propTypes = {
+    show: PropTypes.bool.isRequired,
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // maybe auto
+    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // maybe auto
+    closeCls: PropTypes.string,
+    onClose: PropTypes.func.isRequired
 };
 
 export default Modal;

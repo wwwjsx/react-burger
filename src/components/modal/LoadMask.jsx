@@ -1,16 +1,20 @@
 import React from 'react';
+import ModalOverlay from './ModalOverlay';
 import styles from './Modal.module.css';
+import PropTypes from 'prop-types';
 
 const LoadMask = (props) => {
-    const visibility = props.show === true ? 'visible' : 'hidden';
-
     return (
-      <div className={styles.overlay} style={{ visibility }}>
-          <div className={`${styles.mask} text text_type_main-medium text_color_primary`}>
-              Загрузка ...
-          </div>
-      </div>
+        <ModalOverlay show={props.show}>
+            <div className={`${styles.mask} text text_type_main-medium text_color_primary`}>
+                Загрузка ...
+            </div>
+        </ModalOverlay>
     );
+};
+
+LoadMask.propTypes = {
+  show: PropTypes.bool.isRequired
 };
 
 export default LoadMask;

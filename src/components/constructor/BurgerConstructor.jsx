@@ -5,7 +5,7 @@ import Modal from '../modal/Modal';
 import OrderDetails from './OrderDetails';
 import {ConstructorElement, Button, CurrencyIcon, DragIcon}
     from '@ya.praktikum/react-developer-burger-ui-components';
-import CommonPropTypes from '../common/PropTypes';
+import CommonPropTypes from '../../utils/common/PropTypes';
 
 const BurgerConstructor = (props) => {
     const [isModal, setIsModal] = React.useState(false);
@@ -75,7 +75,7 @@ const BurgerConstructor = (props) => {
 };
 
 BurgerConstructor.propTypes = {
-    ingredients: CommonPropTypes.ingredientsType
+    ingredients: CommonPropTypes.ingredientsArrayType
 }
 
 export default BurgerConstructor;

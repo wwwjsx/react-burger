@@ -5,32 +5,28 @@ import AppHeader from './components/header/AppHeader';
 import BurgerConstructor from './components/constructor/BurgerConstructor';
 import BurgerIngredients from './components/ingredients/BurgerIngredients';
 import LoadMask from './components/modal/LoadMask';
-import Alert from './components/modal/Alert';
-import { INGREDIENTS_URL} from './components/common/Contstants';
+import AlertModal from './components/modal/AlertModal';
+import { INGREDIENTS_URL} from './utils/common/Contstants';
+import { checkResponse } from './utils/Response';
 
 function App() {
     const [isLoading, setIsLoading] = React.useState(false);
     const [ingredients, setIngredients] = React.useState([]);
     const [errorMessage, setErrorMessage] = React.useState('');
+    const isErrorMessage = Boolean(errorMessage);
 
     React.useEffect(() => {
-        const loadError = 'Ошибка загрузка данных';
-
         setIsLoading(true);
 
         fetch(INGREDIENTS_URL)
-            .then(async response => {
-                const json = await response.json();
-
-                if (response.ok) {
-                    setIngredients(json.data);
-                } else {
-                    setErrorMessage(loadError);
-                }
-
-                setIsLoading(false);
-            }).catch((e) => {
-                setErrorMessage(loadError);
+            .then(checkResponse)
+            .then((json) => {
+                setIngredients(json.data);
+            })
+                .catch((e) => {
+                setErrorMessage(e.message);
+            })
+            .finally(() => {
                 setIsLoading(false);
             });
     }, []);
@@ -44,7 +40,9 @@ function App() {
                 <BurgerConstructor ingredients={ingredients}/>
             </div>
             <LoadMask show={isLoading}/>
-            <Alert onClose={() => setErrorMessage('')}>{errorMessage}</Alert>
+            <AlertModal onClose={() => setErrorMessage('')} show={isErrorMessage}>
+                <b>{errorMessage}</b>
+            </AlertModal>
         </div>
     );
 }

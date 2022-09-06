@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "./Ingredient.module.css";
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import CommonPropTypes from '../../utils/common/PropTypes';
 
 const Ingredient = (props) => {
     return (
-        <div className={`${styles.ingredient}`}>
+        <div className={`${styles.ingredient}`} data-id={props._id} onClick={props.onClick}>
             <div
                 className={`${styles.thumb} ml-4 mr-4`}
                 style={{backgroundImage: `url(${props.image})` }}>
@@ -18,9 +19,7 @@ const Ingredient = (props) => {
             <div className={`${styles.name} text text-center text_type_main-default`}>
                 <a
                     href={'#'}
-                    data-id={props._id}
                     className={'text text_color_primary'}
-                    onClick={props.onClick}
                 >
                     {props.name}
                 </a>
@@ -28,5 +27,7 @@ const Ingredient = (props) => {
         </div>
     );
 };
+
+Ingredient.propTypes = CommonPropTypes.ingredientType;
 
 export default Ingredient;

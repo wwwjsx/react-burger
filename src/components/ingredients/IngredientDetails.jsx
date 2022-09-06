@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './IngredientDetails.module.css';
-import CommonPropTypes from '../common/PropTypes';
+import CommonPropTypes from '../../utils/common/PropTypes';
 
 const IngredientDetails = (props) => {
     const { ingredient } = props;
@@ -38,7 +38,7 @@ const IngredientDetails = (props) => {
 };
 
 IngredientDetails.propTypes = {
-    ingredient: CommonPropTypes.ingredientType
+    ingredient: CommonPropTypes.ingredientShapeType
 }
 
 export default IngredientDetails;

@@ -4,33 +4,29 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import Ingredient from './Ingredient';
 import Modal from '../modal/Modal';
 import IngredientDetails from './IngredientDetails';
-import CommonPropTypes from '../common/PropTypes';
+import CommonPropTypes from '../../utils/common/PropTypes';
 
 const BurgerIngredients = (props) => {
     const [activeTab, setActiveTab] = React.useState('main');
     const [ingredient, setIngredient] = React.useState({});
     const [isModal, setIsModal] = React.useState(false);
+    const refMain = React.useRef();
+    const refSauce = React.useRef();
+    const refBun = React.useRef();
     const ingredients = props.ingredients;
 
-    const handleActiveTab = (tab) => {
+    // tab active event handler
+    const handleActiveTab = (tab, ref) => {
         setActiveTab(tab);
-        window.location.hash = `#${tab}`;
+        ref.current.scrollIntoView({behavior: 'smooth'});
     };
 
     // show ingredient item click event handler
-    const handleClickIngredient = (e) => {
-        const el = e.currentTarget;
-        const id = el.getAttribute('data-id');
-        const findItem = ingredients.find(item => item._id === id);
+    const handleClickIngredient = (item) => {
+        setIngredient(item);
 
-        e.preventDefault(); // prevent anchor hash
-
-        if (findItem) {
-            setIngredient(findItem);
-
-            // show ingredient modal popup
-            setIsModal(true);
-        }
+        // show ingredient modal popup
+        setIsModal(true);
     };
 
     // render each blocks ingredient items
@@ -40,7 +36,7 @@ const BurgerIngredients = (props) => {
                 return (
                     <Ingredient
                         key={item._id}
-                        onClick={handleClickIngredient}
+                        onClick={() => handleClickIngredient(item)}
                         {...item}
                     />
                 );
@@ -48,12 +44,11 @@ const BurgerIngredients = (props) => {
     };
 
     // render ingredient tab
-    const renderTab = (title, type) => {
+    const renderTab = (title, type, ref) => {
         return (
             <div className={'mt-10'}>
-                <h2 className="text text_type_main-medium mb-6">
+                <h2 className="text text_type_main-medium mb-6" ref={ref}>
                     {title}
-                    <a name={type}></a>
                 </h2>
                 <div className={styles.box}>
                     {renderItems(type)}
@@ -71,13 +66,22 @@ const BurgerIngredients = (props) => {
 
                 {/* ingredients tabs */}
                 <div className="display-flex">
-                    <Tab value="main" active={activeTab === 'main'} onClick={handleActiveTab}>
+                    <Tab
+                        value="main"
+                        active={activeTab === 'main'}
+                        onClick={() => handleActiveTab('main', refMain)}>
                         Основной
                     </Tab>
-                    <Tab value="sauce" active={activeTab === 'sauce'} onClick={handleActiveTab}>
+                    <Tab
+                        value="sauce"
+                        active={activeTab === 'sauce'}
+                        onClick={() => handleActiveTab('sauce', refSauce)}>
                         Соусы
                     </Tab>
-                    <Tab value="bun" active={activeTab === 'bun'} onClick={handleActiveTab}>
+                    <Tab
+                        value="bun"
+                        active={activeTab === 'bun'}
+                        onClick={() => handleActiveTab('bun', refBun)}>
                         Булки
                     </Tab>
                 </div>
@@ -85,9 +89,9 @@ const BurgerIngredients = (props) => {
 
             {/* ingredients scrollable content */}
             <div className={`${styles.content} custom-scroll`}>
-                {renderTab('Основной', 'main')}
-                {renderTab('Соусы', 'sauce')}
-                {renderTab('Булки', 'bun')}
+                {renderTab('Основной', 'main', refMain)}
+                {renderTab('Соусы', 'sauce', refSauce)}
+                {renderTab('Булки', 'bun', refBun)}
             </div>
 
             <Modal
@@ -105,7 +109,7 @@ const BurgerIngredients = (props) => {
 };
 
 BurgerIngredients.propTypes = {
-    ingredients: CommonPropTypes.ingredientsType
+    ingredients: CommonPropTypes.ingredientsArrayType
 }
 
 export default BurgerIngredients;

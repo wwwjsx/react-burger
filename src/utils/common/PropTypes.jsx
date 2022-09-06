@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 
 const CommonPropTypes = () => {
-    const ingredient = PropTypes.shape({
+
+    const ingredient = {
         _id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
@@ -13,11 +14,18 @@ const CommonPropTypes = () => {
         image: PropTypes.string.isRequired,
         image_mobile: PropTypes.string.isRequired,
         image_large: PropTypes.string.isRequired,
-    });
+    };
+
+    const ingredientTypeShape = PropTypes.shape(ingredient);
 
     return {
         ingredientType: ingredient,
-        ingredientsType: PropTypes.arrayOf(ingredient)
+        ingredientShapeType: ingredientTypeShape,
+        ingredientsArrayType: PropTypes.arrayOf(ingredientTypeShape),
+        headerLinkType: {
+            icon: PropTypes.string.isRequired,
+            activeIcon: PropTypes.string.isRequired
+        }
     };
 };
 
