@@ -1,0 +1,29 @@
+.link {
+    display: inline-flex;
+    justify-content: flex-end;
+    text-align: right;
+    align-items: center;
+    transition: var(--common-transition);
+    margin: 16px 28px 16px 0;
+}
+
+.link:hover {
+    color: var(--text-primary-color);
+}
+
+.link:hover svg {
+    fill: var(--text-primary-color);
+}
+
+.link:last-child {
+    margin-right: 0;
+}
+
+.link svg {
+    margin-right: 8px;
+    transition: var(--common-transition);
+}
+
+.link span {
+    display: inline-block;
+}

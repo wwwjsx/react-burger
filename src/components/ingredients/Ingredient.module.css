@@ -1,0 +1,43 @@
+/* ingredient box */
+.ingredient {
+    width: 270px;
+    margin-left: 16px;
+    margin-right: 8px;
+    margin-bottom: 32px;
+}
+
+/* remove margin bottom last two child */
+.ingredient:nth-last-child(-n+2) {
+    margin-bottom: 0;
+}
+
+/* ingredient thumbnail image set with props */
+.thumb {
+    height: 120px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+}
+
+/* ingredient price */
+.price {
+    justify-content: flex-end;
+    text-align: right;
+    font-family: Iceland;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 24px;
+    font-size: 28px;
+}
+
+/* ingredient price icon */
+.price svg {
+    margin-left: 9px;
+}
+
+/* ingredient name */
+.name {
+    height: 48px;
+}

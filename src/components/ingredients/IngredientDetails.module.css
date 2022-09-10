@@ -1,0 +1,28 @@
+.thumb {
+    height: 240px;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.content {
+    width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.compound {
+    display: flex;
+}
+
+.group {
+    flex: 1;
+}
+
+.property {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.value {
+    text-align: center;
+}

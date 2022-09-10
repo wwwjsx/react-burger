@@ -1,0 +1,50 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+}
+
+.scrollContent {
+    overflow: auto;
+}
+
+.order {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+}
+
+.order .button {
+    position: absolute;
+}
+
+.price {
+    margin-right: 40px;
+    display: inline-flex;
+    justify-content: flex-end;
+    text-align: right;
+    align-items: center;
+}
+
+.price svg {
+    margin-left: 10px;
+}
+
+.element {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 16px;
+    margin-left: 16px;
+}
+
+.element:first-child {
+    margin-top: 0;
+}
+
+.elementIcon {
+    width: 32px;
+    cursor: move;
+}
