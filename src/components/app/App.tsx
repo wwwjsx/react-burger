@@ -8,6 +8,7 @@ import LoadMask from '../modal/LoadMask';
 import AlertModal from '../modal/AlertModal';
 import { INGREDIENTS_URL} from '../../utils/common/Contstants';
 import { checkResponse } from '../../utils/Response';
+import { IngiredientsContext } from '../../utils/Context';
 
 function App() {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -23,8 +24,8 @@ function App() {
             .then((json) => {
                 setIngredients(json.data);
             })
-                .catch((e) => {
-                setErrorMessage(e.message);
+                .catch((err) => {
+                setErrorMessage(err.message || err);
             })
             .finally(() => {
                 setIsLoading(false);
@@ -35,13 +36,15 @@ function App() {
         <div className={styles.App}>
             <AppHeader />
             <div className={`container ${styles.container}`}>
-                <BurgerIngredients ingredients={ingredients}/>
-                <div className={'col-split'}></div>
-                <BurgerConstructor ingredients={ingredients}/>
+                <IngiredientsContext.Provider value={{ ingredients, isLoading }}>
+                    <BurgerIngredients/>
+                    <div className={'col-split'}></div>
+                    <BurgerConstructor/>
+                </IngiredientsContext.Provider>
             </div>
             <LoadMask show={isLoading}/>
             <AlertModal onClose={() => setErrorMessage('')} show={isErrorMessage}>
-                <b>{errorMessage}</b>
+                {errorMessage}
             </AlertModal>
         </div>
     );

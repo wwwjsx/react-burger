@@ -4,16 +4,16 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import Ingredient from './Ingredient';
 import Modal from '../modal/Modal';
 import IngredientDetails from './IngredientDetails';
-import CommonPropTypes from '../../utils/common/PropTypes';
+import { IngiredientsContext } from '../../utils/Context';
 
-const BurgerIngredients = (props) => {
+const BurgerIngredients = () => {
     const [activeTab, setActiveTab] = React.useState('bun');
     const [ingredient, setIngredient] = React.useState({});
     const [isModal, setIsModal] = React.useState(false);
     const refMain = React.useRef();
     const refSauce = React.useRef();
     const refBun = React.useRef();
-    const ingredients = props.ingredients;
+    const { ingredients } = React.useContext(IngiredientsContext);
 
     // tab active event handler
     const handleActiveTab = (tab, ref) => {
@@ -107,9 +107,5 @@ const BurgerIngredients = (props) => {
         </div>
     );
 };
-
-BurgerIngredients.propTypes = {
-    ingredients: CommonPropTypes.ingredientsArrayType.isRequired
-}
 
 export default BurgerIngredients;

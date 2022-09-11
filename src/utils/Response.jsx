@@ -1,6 +1,11 @@
 export const checkResponse = async (response) => {
+    const json = await response.json();
+
     if (response.ok) {
-        return await response.json();
+        return json;
     }
-    return Promise.reject(`Ошибка ${response.status}`);
+
+    const message = json.message || '';
+
+    return Promise.reject(`Ошибка ${response.status} ${message}`);
 }
