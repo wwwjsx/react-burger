@@ -3,6 +3,7 @@ import styles from './Modal.module.css';
 import {CloseIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from './ModalOverlay';
 import PropTypes from 'prop-types';
+import ReactDOM from "react-dom";
 
 const Modal = (props) => {
     const width = props.width || 500;
@@ -41,7 +42,7 @@ const Modal = (props) => {
         }
     };
 
-    return (
+    return ReactDOM.createPortal(
         <ModalOverlay show={props.show} onClick={onClickOverlay}>
             <div className={styles.modal} style={{ width, height }}>
                 <span className={closeCls}>
@@ -49,7 +50,8 @@ const Modal = (props) => {
                 </span>
                 {props.children}
             </div>
-        </ModalOverlay>
+        </ModalOverlay>,
+        document.getElementById('react-modals')
     );
 };
 
