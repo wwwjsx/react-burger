@@ -36,15 +36,15 @@ const BurgerConstructor = () => {
     const isErrorMessage = Boolean(orderLoadErrorMessage);
 
     // returns random ingredient bun - it must be once
-    const getRandomBun = () => {
+    const randomBun = React.useMemo(() => {
         const items = ingredients.filter((item) => item.type === BUN_TYPE);
         const len = items.length;
         const index = Math.floor(Math.random() * len);
         return items[index];
-    };
+    }, [isLoading]);
 
     // returns random ingredient fillings
-    const getRandomFillings = () => {
+    const randomFillings = React.useMemo(() => {
         const min = 2; // minimum 2 ingredients
         const items = ingredients.filter(item => item.type !== BUN_TYPE); // skip bun type
         const len = items.length;
@@ -58,25 +58,22 @@ const BurgerConstructor = () => {
         }
 
         return random;
-    };
+    }, [isLoading]);
 
     React.useEffect(() => {
-        const bun = getRandomBun();
-        const fillings = getRandomFillings();
-
         let totalPrice = 0;
 
-        if (bun) {
-            totalPrice += bun.price * 2; // bun uses twice
-            setBun(bun);
+        if (randomBun) {
+            totalPrice += randomBun.price * 2; // bun uses twice
+            setBun(randomBun);
         }
 
-        if (fillings) {
+        if (randomFillings) {
             // calculate fillings total price
-            fillings.forEach((item) => {
+            randomFillings.forEach((item) => {
                 totalPrice += item.price;
             });
-            setFillings(fillings);
+            setFillings(randomFillings);
         }
 
         totalDispatch({
@@ -89,13 +86,21 @@ const BurgerConstructor = () => {
     // render bun ingredient
     const renderBun = (type) => {
         if (bun) {
+            let text = bun.name;
+
+            if (type === 'top') {
+                text += ' (верх)';
+            } else {
+                text += ' (низ)';
+            }
+
             return (
                 <div className={styles.element}>
                     <div className={styles.elementIcon}></div>
                     <ConstructorElement
                         type={type}
                         isLocked={true}
-                        text={bun.name}
+                        text={text}
                         price={bun.price}
                         thumbnail={bun.image_mobile}
                     />
