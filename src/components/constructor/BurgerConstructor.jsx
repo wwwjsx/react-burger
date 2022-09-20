@@ -1,92 +1,111 @@
 import React from 'react';
-import styles from './BurgerConstructor.module.css';
+import { v4 as uuidv4 } from 'uuid';
+import {
+    ADD_CONSTRUCTOR_ELEMENT,
+    MOVE_CONSTRUCTOR_ELEMENT,
+    REMOVE_CONSTRUCTOR_ELEMENT,
+    SET_BUN, SET_ORDER_TOTAL_PRICE
+} from '../../services/actions/ingredients';
+import { BUN_TYPE, MOVE_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
 import Modal from '../modal/Modal';
 import OrderDetails from './OrderDetails';
-import {ConstructorElement, Button, CurrencyIcon, DragIcon}
+import { ConstructorElement, Button, CurrencyIcon }
     from '@ya.praktikum/react-developer-burger-ui-components';
-import { IngiredientsContext } from '../../utils/Context';
-import { ORDERS_URL } from '../../utils/common/Contstants';
-import LoadMask from "../modal/LoadMask";
-import {checkResponse} from "../../utils/Response";
-import AlertModal from "../modal/AlertModal";
-
-const initialTotal = {
-    total: 0
-};
-
-const totalReducer = (state, action) => {
-    switch (action.type) {
-        case 'set':
-            return { total: action.payload };
-        default:
-            return state;
-    }
-};
+import { useDrop } from 'react-dnd';
+import LoadMask from '../modal/LoadMask';
+import AlertModal from '../modal/AlertModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrder } from '../../services/actions/order';
+import ElementWrapper from './ElementWrapper';
+import styles from './BurgerConstructor.module.css';
 
 const BurgerConstructor = () => {
-    const BUN_TYPE = 'bun';
-    const [isModal, setIsModal] = React.useState(false);
-    const { ingredients, isLoading } = React.useContext(IngiredientsContext);
-    const [bun, setBun] = React.useState(null);
-    const [fillings, setFillings] = React.useState([]);
-    const [totalState, totalDispatch] = React.useReducer(totalReducer, initialTotal, undefined);
-    const [isOrderLoading, setOrderIsLoading] = React.useState(false);
-    const [orderLoadErrorMessage, setOrderLoadErrorMessage] = React.useState(null);
-    const [orderDetails, setOrderDetails] = React.useState(null);
-    const isErrorMessage = Boolean(orderLoadErrorMessage);
-
-    // returns random ingredient bun - it must be once
-    const randomBun = React.useMemo(() => {
-        const items = ingredients.filter((item) => item.type === BUN_TYPE);
-        const len = items.length;
-        const index = Math.floor(Math.random() * len);
-        return items[index];
-    }, [isLoading]);
-
-    // returns random ingredient fillings
-    const randomFillings = React.useMemo(() => {
-        const min = 2; // minimum 2 ingredients
-        const items = ingredients.filter(item => item.type !== BUN_TYPE); // skip bun type
-        const len = items.length;
-        const max = Math.floor(Math.random() * (len - min) + min);
-        const random = [];
-
-        for (let i = 0; i < max; i++) {
-            if (items[i]) {
-                random.push(items[i]);
+    const {
+        ingredients,
+        constructorBun,
+        constructorElements,
+        orderTotalPrice
+    } = useSelector(store => store.ingredients);
+    const { order, orderError, orderRequest, orderFail } = useSelector(store => store.order);
+    const [isOrderModal, setIsOrderModal] = React.useState(false);
+    const [isErrorModal, setIsErrorModal] = React.useState(false);
+    const dispatch = useDispatch();
+    const [{ isHover, isBunHover }, dropRef] = useDrop(() => ({
+        accept: MOVE_COMPONENT_DRAG_TYPE,
+        collect: (monitor) => {
+            const item = monitor.getItem();
+            const isBun = item && item.type === BUN_TYPE;
+            return {
+                isBunHover: isBun && monitor.isOver(),
+                isHover: monitor.isOver()
+            }
+        },
+        drop(item) {
+            if (item) {
+                if (item.type === BUN_TYPE) {
+                    dispatch({
+                        type: SET_BUN,
+                        payload: {...item}
+                    });
+                } else {
+                    item.uuid = uuidv4();
+                    dispatch({
+                        type: ADD_CONSTRUCTOR_ELEMENT,
+                        payload: {...item}
+                    });
+                }
             }
         }
+    }), [ingredients]);
 
-        return random;
-    }, [isLoading]);
+    // move constructor elements up or down
+    const moveCard = React.useCallback((dragIndex, hoverIndex) => {
+        dispatch({
+            type: MOVE_CONSTRUCTOR_ELEMENT,
+            dragIndex,
+            hoverIndex
+        });
 
+    }, [constructorElements, dispatch]);
+
+    React.useEffect(() => {
+        setIsOrderModal(!!order);
+        setIsErrorModal(orderFail);
+    }, [order, orderFail]);
+
+    // calculate order total price
     React.useEffect(() => {
         let totalPrice = 0;
 
-        if (randomBun) {
-            totalPrice += randomBun.price * 2; // bun uses twice
-            setBun(randomBun);
+        if (constructorBun) {
+            const bunPrice = constructorBun.price * 2;
+            totalPrice += bunPrice; // bun uses twice
         }
 
-        if (randomFillings) {
+        if (constructorElements) {
+            let fillingsPrice = 0;
+
             // calculate fillings total price
-            randomFillings.forEach((item) => {
-                totalPrice += item.price;
+            constructorElements.forEach((item) => {
+                if (item) {
+                    fillingsPrice += item.price;
+                }
             });
-            setFillings(randomFillings);
+
+            totalPrice += fillingsPrice;
         }
 
-        totalDispatch({
-            type: 'set',
+        dispatch({
+            type: SET_ORDER_TOTAL_PRICE,
             payload: totalPrice,
         });
 
-    }, [isLoading]);
+    }, [constructorBun, constructorElements]);
 
     // render bun ingredient
     const renderBun = (type) => {
-        if (bun) {
-            let text = bun.name;
+        if (constructorBun) {
+            let text = constructorBun.name;
 
             if (type === 'top') {
                 text += ' (верх)';
@@ -94,15 +113,21 @@ const BurgerConstructor = () => {
                 text += ' (низ)';
             }
 
+            let cls = styles.element;
+
+            if (isBunHover) {
+                cls += ` ${styles.bunHover}`;
+            }
+
             return (
-                <div className={styles.element}>
+                <div className={cls}>
                     <div className={styles.elementIcon}></div>
                     <ConstructorElement
                         type={type}
                         isLocked={true}
                         text={text}
-                        price={bun.price}
-                        thumbnail={bun.image_mobile}
+                        price={constructorBun.price}
+                        thumbnail={constructorBun.image_mobile}
                     />
                 </div>
             );
@@ -111,90 +136,85 @@ const BurgerConstructor = () => {
         return null;
     };
 
+    // load user order data
     const handleOrder = () => {
-        const ingredientsIds = [];
+        const ids = [];
 
         // collect random bun id
-        if (bun) {
-            ingredientsIds.push(bun._id);
+        if (constructorBun) {
+            ids.push(constructorBun._id);
         }
 
         // collect random fillings id
-        if (fillings) {
-            fillings.forEach((item) => {
-                ingredientsIds.push(item._id);
+        if (constructorElements) {
+            constructorElements.forEach((item) => {
+                ids.push(item._id);
             });
         }
 
-        setOrderIsLoading(true);
-
-        fetch(ORDERS_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ingredients: ingredientsIds,
-            })
-        })
-        .then(checkResponse)
-        .then((json) => {
-            setIsModal(true);
-            setOrderDetails(json);
-        })
-        .catch((err) => {
-            setOrderLoadErrorMessage(err.message || err);
-        })
-        .finally(() => {
-            setOrderIsLoading(false);
-        });
+        dispatch(getOrder(ids));
     };
+
+    // handle "remove" constructor element
+    const handleClose = (e, item) => {
+      dispatch({
+          type: REMOVE_CONSTRUCTOR_ELEMENT,
+          uuid: item.uuid
+      });
+    };
+
+    // scrollable element CSS classes
+    const scrollCls = React.useMemo(() => {
+        let cls = `${styles.scrollContent} custom-scroll`;
+
+        if (isHover && !isBunHover) {
+            cls += ` ${styles.dropHover}`;
+        }
+
+        return cls
+    }, [isHover, isBunHover]);
 
     return (
         <div className={`${styles.column} pt-25`}>
-            <div className={'mb-4'}>
-                {renderBun('top')}
-            </div>
-            <div className={`${styles.scrollContent} custom-scroll`}>
-                {fillings.map((item) => {
-                    return (
-                        <div className={styles.element} key={item._id}>
-                            <div className={styles.elementIcon}>
-                                <DragIcon type="primary" />
-                            </div>
-                            <ConstructorElement
-                                isLocked={false}
-                                text={item.name}
-                                price={item.price}
-                                thumbnail={item.image_mobile}
-                            />
-                        </div>
-                    );
-                })}
-            </div>
-            <div className={'mt-4'}>
-                {renderBun('bottom')}
+            <div className={styles.dropBox} ref={dropRef}>
+                <div className={'mb-4'}>
+                    {renderBun('top')}
+                </div>
+                <div className={scrollCls}>
+                    {constructorElements.map((item, index) => {
+                        return <ElementWrapper
+                            key={item.uuid}
+                            item={item}
+                            index={index}
+                            moveCard={moveCard}
+                            handleClose={(e) => handleClose(e, item)}
+                        />
+                    })}
+                </div>
+                <div className={'mt-4'}>
+                    {renderBun('bottom')}
+                </div>
             </div>
             <div className={`${styles.order} pt-10 pr-6 pb-6`}>
                 <span className={`${styles.price} text text_type_main-medium`}>
-                    {totalState.total} <CurrencyIcon type="primary" />
+                    {orderTotalPrice} <CurrencyIcon type="primary" />
                 </span>
                 <Button type="primary" size="large" onClick={handleOrder}>
                     Оформить заказ
                 </Button>
-                {orderDetails &&
+                {order &&
                     <Modal
-                        show={isModal}
+                        show={isOrderModal}
                         width={720}
                         height={718}
-                        onClose={() => setIsModal(false)}
+                        onClose={() => setIsOrderModal(false)}
                     >
-                        <OrderDetails order={orderDetails.order}/>
+                        <OrderDetails order={order}/>
                     </Modal>
                 }
-                <LoadMask show={isOrderLoading}> Загрузка заказа ... </LoadMask>
-                <AlertModal onClose={() => setOrderLoadErrorMessage('')} show={isErrorMessage}>
-                    {orderLoadErrorMessage}
+                <LoadMask show={orderRequest}> Загрузка заказа ... </LoadMask>
+                <AlertModal onClose={() => setIsErrorModal(false)} show={isErrorModal}>
+                    {orderError}
                 </AlertModal>
             </div>
         </div>

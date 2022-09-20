@@ -4,16 +4,18 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import Ingredient from './Ingredient';
 import Modal from '../modal/Modal';
 import IngredientDetails from './IngredientDetails';
-import { IngiredientsContext } from '../../utils/Context';
+import {useDispatch, useSelector} from 'react-redux';
+import {SET_INGREDIENT} from '../../services/actions/ingredients';
 
 const BurgerIngredients = () => {
+    const { ingredients } = useSelector(store => store.ingredients);
     const [activeTab, setActiveTab] = React.useState('bun');
-    const [ingredient, setIngredient] = React.useState({});
+    const ingredient = useSelector(store => store.ingredients.ingredient);
     const [isModal, setIsModal] = React.useState(false);
     const refMain = React.useRef();
     const refSauce = React.useRef();
     const refBun = React.useRef();
-    const { ingredients } = React.useContext(IngiredientsContext);
+    const dispatch = useDispatch();
 
     // tab active event handler
     const handleActiveTab = (tab, ref) => {
@@ -23,8 +25,10 @@ const BurgerIngredients = () => {
 
     // show ingredient item click event handler
     const handleClickIngredient = (item) => {
-        setIngredient(item);
-
+        dispatch({
+            type: SET_INGREDIENT,
+            payload: item
+        });
         // show ingredient modal popup
         setIsModal(true);
     };
@@ -37,7 +41,7 @@ const BurgerIngredients = () => {
                     <Ingredient
                         key={item._id}
                         onClick={() => handleClickIngredient(item)}
-                        {...item}
+                        item={item}
                     />
                 );
             });
