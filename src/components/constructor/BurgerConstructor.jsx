@@ -68,7 +68,7 @@ const BurgerConstructor = () => {
             hoverIndex
         });
 
-    }, [constructorElements, dispatch]);
+    }, [dispatch]);
 
     React.useEffect(() => {
         setIsOrderModal(!!order);
@@ -102,7 +102,7 @@ const BurgerConstructor = () => {
             payload: totalPrice,
         });
 
-    }, [constructorBun, constructorElements]);
+    }, [dispatch, constructorBun, constructorElements]);
 
     // render bun ingredient
     const renderBun = (type) => {
