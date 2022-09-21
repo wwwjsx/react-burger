@@ -15,7 +15,7 @@ import { useDrop } from 'react-dnd';
 import LoadMask from '../modal/LoadMask';
 import AlertModal from '../modal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrder } from '../../services/actions/order';
+import { getOrder } from '../../utils/api/order';
 import ElementWrapper from './ElementWrapper';
 import styles from './BurgerConstructor.module.css';
 
@@ -41,19 +41,21 @@ const BurgerConstructor = () => {
             }
         },
         drop(item) {
-            if (item) {
-                if (item.type === BUN_TYPE) {
-                    dispatch({
-                        type: SET_BUN,
-                        payload: {...item}
-                    });
-                } else {
-                    item.uuid = uuidv4();
-                    dispatch({
-                        type: ADD_CONSTRUCTOR_ELEMENT,
-                        payload: {...item}
-                    });
-                }
+            if (!item) {
+                return;
+            }
+
+            if (item.type === BUN_TYPE) {
+                dispatch({
+                    type: SET_BUN,
+                    payload: {...item}
+                });
+            } else {
+                item.uuid = uuidv4();
+                dispatch({
+                    type: ADD_CONSTRUCTOR_ELEMENT,
+                    payload: {...item}
+                });
             }
         }
     }), [ingredients]);
@@ -105,13 +107,7 @@ const BurgerConstructor = () => {
     // render bun ingredient
     const renderBun = (type) => {
         if (constructorBun) {
-            let text = constructorBun.name;
-
-            if (type === 'top') {
-                text += ' (верх)';
-            } else {
-                text += ' (низ)';
-            }
+            const text = `${constructorBun.name} ${type === 'top' ? '(верх)' : '(низ)'}`;
 
             let cls = styles.element;
 
@@ -124,7 +120,7 @@ const BurgerConstructor = () => {
                     <div className={styles.elementIcon}></div>
                     <ConstructorElement
                         type={type}
-                        isLocked={true}
+                        isLocked
                         text={text}
                         price={constructorBun.price}
                         thumbnail={constructorBun.image_mobile}
@@ -156,11 +152,21 @@ const BurgerConstructor = () => {
     };
 
     // handle "remove" constructor element
-    const handleClose = (e, item) => {
+    const handleClose = (item) => {
       dispatch({
           type: REMOVE_CONSTRUCTOR_ELEMENT,
           uuid: item.uuid
       });
+    };
+
+    // close order modal popup
+    const handleCloseModalOrder = () => {
+        setIsOrderModal(false);
+    };
+
+    // close alert modal popup
+    const handleCloseAlertModal = () => {
+        setIsErrorModal(false);
     };
 
     // scrollable element CSS classes
@@ -187,7 +193,7 @@ const BurgerConstructor = () => {
                             item={item}
                             index={index}
                             moveCard={moveCard}
-                            handleClose={(e) => handleClose(e, item)}
+                            handleClose={() => handleClose(item)}
                         />
                     })}
                 </div>
@@ -202,20 +208,25 @@ const BurgerConstructor = () => {
                 <Button type="primary" size="large" onClick={handleOrder}>
                     Оформить заказ
                 </Button>
-                {order &&
+                {isOrderModal &&
                     <Modal
-                        show={isOrderModal}
                         width={720}
                         height={718}
-                        onClose={() => setIsOrderModal(false)}
+                        onClose={handleCloseModalOrder}
                     >
                         <OrderDetails order={order}/>
                     </Modal>
                 }
-                <LoadMask show={orderRequest}> Загрузка заказа ... </LoadMask>
-                <AlertModal onClose={() => setIsErrorModal(false)} show={isErrorModal}>
-                    {orderError}
-                </AlertModal>
+
+                {orderRequest &&
+                    <LoadMask> Загрузка заказа ... </LoadMask>
+                }
+
+                {isErrorModal &&
+                    <AlertModal onClose={handleCloseAlertModal}>
+                        {orderError}
+                    </AlertModal>
+                }
             </div>
         </div>
     );

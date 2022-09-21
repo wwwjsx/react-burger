@@ -6,8 +6,10 @@
 }
 
 .scrollContent {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     min-height: 80px;
+    width: 100%;
 }
 
 .dropHover {
@@ -50,6 +52,7 @@
     align-items: center;
     margin-top: 16px;
     margin-left: 16px;
+    width: 100%;
 }
 
 .element:first-child {

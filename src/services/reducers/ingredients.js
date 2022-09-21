@@ -1,5 +1,9 @@
-import { BUN_TYPE } from '../../utils/common/Contstants';
 import update from 'immutability-helper';
+
+import {
+    BUN_TYPE,
+    MIN_RANDOM_CONSTRUCTOR_ELEMENTS
+} from '../../utils/common/Contstants';
 import {
     SET_INGREDIENTS_REQUEST,
     SET_INGREDIENTS_SUCCESS,
@@ -9,7 +13,7 @@ import {
     SET_BUN,
     ADD_CONSTRUCTOR_ELEMENT,
     MOVE_CONSTRUCTOR_ELEMENT,
-    REMOVE_CONSTRUCTOR_ELEMENT
+    REMOVE_CONSTRUCTOR_ELEMENT, RESET_INGREDIENT_REQUEST
 } from '../actions/ingredients';
 
 const initialState = {
@@ -29,7 +33,7 @@ const initialState = {
     // constructor random elements
     constructorElements: [],
 
-    orderTotalPrice: 0,
+    orderTotalPrice: 0
 };
 
 // returns random bun ingredients
@@ -49,7 +53,7 @@ const getBun = (ingredients) => {
 
 // returns random ingredients fillings
 const getConstructorElements = (ingredients) => {
-    const min = 2; // minimum 2 ingredients
+    const min = MIN_RANDOM_CONSTRUCTOR_ELEMENTS;
     const items = [...ingredients].filter(item => item.type !== BUN_TYPE); // skip bun type
     const len = items.length;
     const max = Math.floor(Math.random() * (len - min) + min);
@@ -69,6 +73,14 @@ const getConstructorElements = (ingredients) => {
 
 export const ingredientsReducer = (state = initialState, action) => {
     switch (action.type) {
+        case RESET_INGREDIENT_REQUEST: {
+            return {
+                ...state,
+                ingredientsRequest: false,
+                ingredientsFail: false,
+                ingredientsError: null
+            };
+        }
         case SET_INGREDIENTS_REQUEST: {
             return {
                 ...state,

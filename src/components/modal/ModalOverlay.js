@@ -3,12 +3,9 @@ import styles from './ModalOverlay.module.css';
 import PropTypes from 'prop-types';
 
 const ModalOverlay = (props) => {
-    const visibility = (props.show === true) ? 'visible' : 'hidden';
-
     return (
         <div
             className={styles.overlay}
-            style={{ visibility }}
             onClick={props.onClick}
             data-modal-overlay={true}
         >
@@ -18,7 +15,6 @@ const ModalOverlay = (props) => {
 };
 
 ModalOverlay.propTypes = {
-    show: PropTypes.bool.isRequired,
     onClick: PropTypes.func
 };
 

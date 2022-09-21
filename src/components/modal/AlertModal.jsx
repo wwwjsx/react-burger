@@ -7,7 +7,6 @@ const AlertModal = (props) => {
     const title = props.title || 'Ошибка';
     return (
         <Modal
-            show={props.show}
             height={'auto'}
             closeCls={styles.alertClose}
             onClose={props.onClose}
@@ -26,7 +25,6 @@ const AlertModal = (props) => {
 
 AlertModal.propTypes = {
     title: PropTypes.string,
-    show: PropTypes.bool.isRequired,
     children: PropTypes.node,
     onClose: PropTypes.func
 };

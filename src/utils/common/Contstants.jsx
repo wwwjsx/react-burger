@@ -5,3 +5,4 @@ export const ORDERS_URL = `${BASE_API}/orders`;
 export const BUN_TYPE = 'bun';
 export const SORT_COMPONENT_DRAG_TYPE = 'component';
 export const MOVE_COMPONENT_DRAG_TYPE = 'ingredient';
+export const MIN_RANDOM_CONSTRUCTOR_ELEMENTS = 2;

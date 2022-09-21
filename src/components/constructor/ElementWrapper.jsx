@@ -72,7 +72,7 @@ const ElementWrapper = ({ item, handleClose, index, moveCard }) => {
 
     // Прерываем базовую функция для onDrop
     // потому что браузер по умолчанию не сбрасывает наш элемент в контейнер
-    const preventDefault = (e) => e.preventDefault();
+    const handleOnDrop = (e) => e.preventDefault();
 
     return (
         <div
@@ -80,7 +80,7 @@ const ElementWrapper = ({ item, handleClose, index, moveCard }) => {
             className={styles.element}
             data-handler-id={handlerId}
             style={{ opacity }}
-            onDrop={preventDefault}
+            onDrop={handleOnDrop}
         >
             <div ref={drag} className={styles.elementIcon}>
                 <DragIcon type="primary"/>

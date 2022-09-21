@@ -7,26 +7,27 @@ import BurgerIngredients from '../ingredients/BurgerIngredients';
 import LoadMask from '../modal/LoadMask';
 import AlertModal from '../modal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { getIngredients } from '../../services/actions/ingredients';
+import { RESET_INGREDIENT_REQUEST } from '../../services/actions/ingredients';
+import { getIngredients } from '../../utils/api/ingredients';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 function App() {
-    const [isErrorModal, setIsErrorModal] = React.useState(false);
+    const dispatch = useDispatch();
     const {
         ingredientsFail,
         ingredientsError,
         ingredientsRequest
     } = useSelector(state => state.ingredients);
-    const dispatch = useDispatch();
-
-    React.useEffect(() => {
-        setIsErrorModal(ingredientsFail);
-    }, [ingredientsError]);
 
     React.useEffect(() => {
         dispatch(getIngredients());
-    }, []);
+    }, [dispatch]);
+
+    // close alert popup
+    const handleCloseAlert = () => {
+        dispatch({ type: RESET_INGREDIENT_REQUEST });
+    };
 
     return (
         <div className={styles.App}>
@@ -38,10 +39,14 @@ function App() {
                     <BurgerConstructor/>
                 </DndProvider>
             </div>
-            <LoadMask show={ingredientsRequest}/>
-            <AlertModal onClose={(e) => setIsErrorModal(false)} show={isErrorModal}>
-                {ingredientsError}
-            </AlertModal>
+
+            {ingredientsRequest && <LoadMask />}
+
+            {ingredientsFail &&
+                <AlertModal  onClose={handleCloseAlert}>
+                    {ingredientsError}
+                </AlertModal>
+            }
         </div>
     );
 }
