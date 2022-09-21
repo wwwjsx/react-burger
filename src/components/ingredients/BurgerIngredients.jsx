@@ -1,19 +1,21 @@
 import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import Ingredient from './Ingredient';
 import Modal from '../modal/Modal';
 import IngredientDetails from './IngredientDetails';
-import { IngiredientsContext } from '../../utils/Context';
+import {useDispatch, useSelector} from 'react-redux';
+import {SET_INGREDIENT} from '../../services/actions/ingredients';
+import IngredientTab from "./IngredientTab";
 
 const BurgerIngredients = () => {
+    const { ingredients } = useSelector(store => store.ingredients);
     const [activeTab, setActiveTab] = React.useState('bun');
-    const [ingredient, setIngredient] = React.useState({});
+    const ingredient = useSelector(store => store.ingredients.ingredient);
     const [isModal, setIsModal] = React.useState(false);
     const refMain = React.useRef();
     const refSauce = React.useRef();
     const refBun = React.useRef();
-    const { ingredients } = React.useContext(IngiredientsContext);
+    const dispatch = useDispatch();
 
     // tab active event handler
     const handleActiveTab = (tab, ref) => {
@@ -23,38 +25,39 @@ const BurgerIngredients = () => {
 
     // show ingredient item click event handler
     const handleClickIngredient = (item) => {
-        setIngredient(item);
-
+        dispatch({
+            type: SET_INGREDIENT,
+            payload: item
+        });
         // show ingredient modal popup
         setIsModal(true);
     };
 
-    // render each blocks ingredient items
-    const renderItems = (type) => {
-        return ingredients.filter(item => item.type === type)
-            .map((item) => {
-                return (
-                    <Ingredient
-                        key={item._id}
-                        onClick={() => handleClickIngredient(item)}
-                        {...item}
-                    />
-                );
-            });
+    // close ingredient modal popup
+    const handleCloseIngredientModal = () => {
+        setIsModal(false);
     };
 
-    // render ingredient tab
-    const renderTab = (title, type, ref) => {
-        return (
-            <div className={'mt-10'}>
-                <h2 className="text text_type_main-medium mb-6" ref={ref}>
-                    {title}
-                </h2>
-                <div className={styles.box}>
-                    {renderItems(type)}
-                </div>
-            </div>
-        );
+    // handle constructor ingredients scroll event
+    const handleScroll = (e) => {
+        const top = e.target.scrollTop + e.target.offsetTop;
+
+        const calc = (ref) => {
+            const el = ref.current;
+            const elBox = el.nextSibling;
+            const height = elBox.scrollHeight;
+            const offset = el.offsetTop;
+
+            return top >= offset && top <= offset + height;
+        };
+
+        if (calc(refSauce)) {
+            setActiveTab('sauce');
+        } else if (calc(refMain)) {
+            setActiveTab('main');
+        } else {
+            setActiveTab('bun');
+        }
     };
 
     return (
@@ -88,22 +91,41 @@ const BurgerIngredients = () => {
             </div>
 
             {/* ingredients scrollable content */}
-            <div className={`${styles.content} custom-scroll`}>
-                {renderTab('Булки', 'bun', refBun)}
-                {renderTab('Соусы', 'sauce', refSauce)}
-                {renderTab('Начинки', 'main', refMain)}
+            <div className={`${styles.content} custom-scroll`} onScroll={handleScroll}>
+                <IngredientTab
+                    ingredients={ingredients}
+                    title={'Булки'}
+                    type={'bun'}
+                    reference={refBun}
+                    onClick={handleClickIngredient}
+                />
+                <IngredientTab
+                    ingredients={ingredients}
+                    title={'Соусы'}
+                    type={'sauce'}
+                    reference={refSauce}
+                    onClick={handleClickIngredient}
+                />
+                <IngredientTab
+                    ingredients={ingredients}
+                    title={'Начинки'}
+                    type={'main'}
+                    reference={refMain}
+                    onClick={handleClickIngredient}
+                />
             </div>
 
-            <Modal
-                show={isModal}
-                width={720}
-                height={540}
-                onClose={() => setIsModal(false)}
-            >
-                {ingredient && ingredient._id &&
-                    <IngredientDetails ingredient={ingredient}/>
-                }
-            </Modal>
+            {isModal &&
+                <Modal
+                    width={720}
+                    height={540}
+                    onClose={handleCloseIngredientModal}
+                >
+                    {ingredient && ingredient._id &&
+                        <IngredientDetails ingredient={ingredient}/>
+                    }
+                </Modal>
+            }
         </div>
     );
 };

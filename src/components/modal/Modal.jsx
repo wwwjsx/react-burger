@@ -8,7 +8,6 @@ import ReactDOM from "react-dom";
 const Modal = (props) => {
     const width = props.width || 500;
     const height = props.height || 500;
-    const isOpen = props.show;
     let closeCls = styles.close;
 
     if (props.closeCls) {
@@ -22,16 +21,14 @@ const Modal = (props) => {
            }
        };
 
-       if (isOpen) {
-           document.addEventListener('keydown', handleEsc);
+        document.addEventListener('keydown', handleEsc);
 
-           // component will unmount
-           return () => {
-               document.removeEventListener('keydown', handleEsc);
-           };
-       }
+        // component will unmount
+        return () => {
+            document.removeEventListener('keydown', handleEsc);
+        };
 
-    }, [isOpen]);
+    }, []);
 
     // handler for when clicked on modal overlay
     const onClickOverlay = (e) => {
@@ -43,7 +40,7 @@ const Modal = (props) => {
     };
 
     return ReactDOM.createPortal(
-        <ModalOverlay show={props.show} onClick={onClickOverlay}>
+        <ModalOverlay onClick={onClickOverlay}>
             <div className={styles.modal} style={{ width, height }}>
                 <span className={closeCls}>
                     <CloseIcon type="primary" onClick={props.onClose}/>
@@ -56,7 +53,6 @@ const Modal = (props) => {
 };
 
 Modal.propTypes = {
-    show: PropTypes.bool.isRequired,
     width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // maybe auto
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // maybe auto
     closeCls: PropTypes.string,

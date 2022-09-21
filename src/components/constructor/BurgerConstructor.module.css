@@ -6,7 +6,21 @@
 }
 
 .scrollContent {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 80px;
+    width: 100%;
+}
+
+.dropHover {
+    background-color: #212128;
+}
+
+.dropBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 
 .order {
@@ -38,6 +52,7 @@
     align-items: center;
     margin-top: 16px;
     margin-left: 16px;
+    width: 100%;
 }
 
 .element:first-child {
@@ -47,4 +62,8 @@
 .elementIcon {
     width: 32px;
     cursor: move;
+}
+
+.bunHover {
+    background-color: #212128;
 }

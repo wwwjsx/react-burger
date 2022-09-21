@@ -1,7 +1,6 @@
 import React from 'react';
 import ModalOverlay from './ModalOverlay';
 import styles from './Modal.module.css';
-import PropTypes from 'prop-types';
 
 const LoadMask = (props) => {
     const message = props.children || 'Загрузка ...';
@@ -12,10 +11,6 @@ const LoadMask = (props) => {
             </div>
         </ModalOverlay>
     );
-};
-
-LoadMask.propTypes = {
-  show: PropTypes.bool.isRequired
 };
 
 export default LoadMask;
