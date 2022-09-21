@@ -9,7 +9,7 @@ import {
 import { BUN_TYPE, MOVE_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
 import Modal from '../modal/Modal';
 import OrderDetails from './OrderDetails';
-import { ConstructorElement, Button, CurrencyIcon }
+import { Button, CurrencyIcon }
     from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrop } from 'react-dnd';
 import LoadMask from '../modal/LoadMask';
