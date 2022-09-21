@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getOrder } from '../../utils/api/order';
 import ElementWrapper from './ElementWrapper';
 import styles from './BurgerConstructor.module.css';
+import ElementBun from "./ElementBun";
 
 const BurgerConstructor = () => {
     const {
@@ -104,34 +105,6 @@ const BurgerConstructor = () => {
 
     }, [dispatch, constructorBun, constructorElements]);
 
-    // render bun ingredient
-    const renderBun = (type) => {
-        if (constructorBun) {
-            const text = `${constructorBun.name} ${type === 'top' ? '(верх)' : '(низ)'}`;
-
-            let cls = styles.element;
-
-            if (isBunHover) {
-                cls += ` ${styles.bunHover}`;
-            }
-
-            return (
-                <div className={cls}>
-                    <div className={styles.elementIcon}></div>
-                    <ConstructorElement
-                        type={type}
-                        isLocked
-                        text={text}
-                        price={constructorBun.price}
-                        thumbnail={constructorBun.image_mobile}
-                    />
-                </div>
-            );
-        }
-
-        return null;
-    };
-
     // load user order data
     const handleOrder = () => {
         const ids = [];
@@ -184,7 +157,13 @@ const BurgerConstructor = () => {
         <div className={`${styles.column} pt-25`}>
             <div className={styles.dropBox} ref={dropRef}>
                 <div className={'mb-4'}>
-                    {renderBun('top')}
+                    {constructorBun &&
+                        <ElementBun
+                            item={constructorBun}
+                            type={'top'}
+                            isHover={isBunHover}
+                        />
+                    }
                 </div>
                 <div className={scrollCls}>
                     {constructorElements.map((item, index) => {
@@ -198,7 +177,13 @@ const BurgerConstructor = () => {
                     })}
                 </div>
                 <div className={'mt-4'}>
-                    {renderBun('bottom')}
+                    {constructorBun &&
+                        <ElementBun
+                            item={constructorBun}
+                            type={'bottom'}
+                            isHover={isBunHover}
+                        />
+                    }
                 </div>
             </div>
             <div className={`${styles.order} pt-10 pr-6 pb-6`}>
