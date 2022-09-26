@@ -1,11 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import {
-    ADD_CONSTRUCTOR_ELEMENT,
-    MOVE_CONSTRUCTOR_ELEMENT,
-    REMOVE_CONSTRUCTOR_ELEMENT,
-    SET_BUN, SET_ORDER_TOTAL_PRICE
-} from '../../services/actions/ingredients';
 import { BUN_TYPE, MOVE_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
 import Modal from '../modal/Modal';
 import OrderDetails from './OrderDetails';
@@ -15,22 +9,30 @@ import { useDrop } from 'react-dnd';
 import LoadMask from '../modal/LoadMask';
 import AlertModal from '../modal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrder } from '../../utils/api/order';
 import ElementWrapper from './ElementWrapper';
 import styles from './BurgerConstructor.module.css';
-import ElementBun from "./ElementBun";
+import ElementBun from './ElementBun';
+import {
+    setIngredients,
+    removeIngredient,
+    setBun,
+    addIngredient,
+    moveIngredient
+} from '../../services/slices/burger';
+import { orderThunk, resetOrderRequest } from '../../services/slices/order';
+import { useAuth } from '../../services/auth';
+import {useHistory} from "react-router-dom";
 
 const BurgerConstructor = () => {
-    const {
-        ingredients,
-        constructorBun,
-        constructorElements,
-        orderTotalPrice
-    } = useSelector(store => store.ingredients);
-    const { order, orderError, orderRequest, orderFail } = useSelector(store => store.order);
-    const [isOrderModal, setIsOrderModal] = React.useState(false);
-    const [isErrorModal, setIsErrorModal] = React.useState(false);
     const dispatch = useDispatch();
+    const {
+        ingredients
+    } = useSelector(store => store.ingredients);
+    const history = useHistory();
+    const auth = useAuth();
+    const order = useSelector(store => store.order);
+    const burger = useSelector(store => store.burger);
+    const [isOrderModal, setIsOrderModal] = useState(false);
     const [{ isHover, isBunHover }, dropRef] = useDrop(() => ({
         accept: MOVE_COMPONENT_DRAG_TYPE,
         collect: (monitor) => {
@@ -47,89 +49,64 @@ const BurgerConstructor = () => {
             }
 
             if (item.type === BUN_TYPE) {
-                dispatch({
-                    type: SET_BUN,
-                    payload: {...item}
-                });
+                dispatch(setBun({...item}));
             } else {
                 item.uuid = uuidv4();
-                dispatch({
-                    type: ADD_CONSTRUCTOR_ELEMENT,
-                    payload: {...item}
-                });
+                dispatch(addIngredient({...item}));
             }
         }
     }), [ingredients]);
 
     // move constructor elements up or down
     const moveCard = React.useCallback((dragIndex, hoverIndex) => {
-        dispatch({
-            type: MOVE_CONSTRUCTOR_ELEMENT,
+        dispatch(moveIngredient({
             dragIndex,
             hoverIndex
-        });
+        }))
 
     }, [dispatch]);
 
-    React.useEffect(() => {
-        setIsOrderModal(!!order);
-        setIsErrorModal(orderFail);
-    }, [order, orderFail]);
-
-    // calculate order total price
-    React.useEffect(() => {
-        let totalPrice = 0;
-
-        if (constructorBun) {
-            const bunPrice = constructorBun.price * 2;
-            totalPrice += bunPrice; // bun uses twice
-        }
-
-        if (constructorElements) {
-            let fillingsPrice = 0;
-
-            // calculate fillings total price
-            constructorElements.forEach((item) => {
-                if (item) {
-                    fillingsPrice += item.price;
-                }
-            });
-
-            totalPrice += fillingsPrice;
-        }
-
-        dispatch({
-            type: SET_ORDER_TOTAL_PRICE,
-            payload: totalPrice,
-        });
-
-    }, [dispatch, constructorBun, constructorElements]);
+    // load random burger ingredients from ingredients
+    useEffect(() => {
+        dispatch(setIngredients(ingredients));
+    }, [dispatch, ingredients]);
 
     // load user order data
-    const handleOrder = () => {
+    const handleOrder = async () => {
         const ids = [];
 
         // collect random bun id
-        if (constructorBun) {
-            ids.push(constructorBun._id);
+        if (burger.bun) {
+            ids.push(burger.bun._id);
         }
 
         // collect random fillings id
-        if (constructorElements) {
-            constructorElements.forEach((item) => {
+        if (burger.ingredients) {
+            burger.ingredients.forEach((item) => {
                 ids.push(item._id);
             });
         }
 
-        dispatch(getOrder(ids));
+        if (auth.isLogged) {
+            await auth.refresh();
+
+            dispatch(orderThunk({
+                ingredients: ids
+            })).then((res) => {
+                if (res && res.payload && res.payload.success) {
+                    setIsOrderModal(true);
+                }
+            });
+        } else {
+            history.push({
+               pathname: '/login'
+            });
+        }
     };
 
     // handle "remove" constructor element
     const handleClose = (item) => {
-      dispatch({
-          type: REMOVE_CONSTRUCTOR_ELEMENT,
-          uuid: item.uuid
-      });
+      dispatch(removeIngredient(item));
     };
 
     // close order modal popup
@@ -139,7 +116,7 @@ const BurgerConstructor = () => {
 
     // close alert modal popup
     const handleCloseAlertModal = () => {
-        setIsErrorModal(false);
+        dispatch(resetOrderRequest());
     };
 
     // scrollable element CSS classes
@@ -157,16 +134,16 @@ const BurgerConstructor = () => {
         <div className={`${styles.column} pt-25`}>
             <div className={styles.dropBox} ref={dropRef}>
                 <div className={'mb-4'}>
-                    {constructorBun &&
+                    {burger.bun &&
                         <ElementBun
-                            item={constructorBun}
+                            item={burger.bun}
                             type={'top'}
                             isHover={isBunHover}
                         />
                     }
                 </div>
                 <div className={scrollCls}>
-                    {constructorElements.map((item, index) => {
+                    {burger.ingredients.map((item, index) => {
                         return <ElementWrapper
                             key={item.uuid}
                             item={item}
@@ -177,9 +154,9 @@ const BurgerConstructor = () => {
                     })}
                 </div>
                 <div className={'mt-4'}>
-                    {constructorBun &&
+                    {burger.bun &&
                         <ElementBun
-                            item={constructorBun}
+                            item={burger.bun}
                             type={'bottom'}
                             isHover={isBunHover}
                         />
@@ -188,7 +165,7 @@ const BurgerConstructor = () => {
             </div>
             <div className={`${styles.order} pt-10 pr-6 pb-6`}>
                 <span className={`${styles.price} text text_type_main-medium`}>
-                    {orderTotalPrice} <CurrencyIcon type="primary" />
+                    {burger.totalPrice} <CurrencyIcon type="primary" />
                 </span>
                 <Button type="primary" size="large" onClick={handleOrder}>
                     Оформить заказ
@@ -199,17 +176,17 @@ const BurgerConstructor = () => {
                         height={718}
                         onClose={handleCloseModalOrder}
                     >
-                        <OrderDetails order={order}/>
+                        <OrderDetails order={order.order}/>
                     </Modal>
                 }
 
-                {orderRequest &&
+                {(order.request || auth.request) &&
                     <LoadMask> Загрузка заказа ... </LoadMask>
                 }
 
-                {isErrorModal &&
+                {order.fail &&
                     <AlertModal onClose={handleCloseAlertModal}>
-                        {orderError}
+                        {order.message}
                     </AlertModal>
                 }
             </div>

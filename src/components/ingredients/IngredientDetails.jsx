@@ -6,7 +6,7 @@ const IngredientDetails = (props) => {
     const { ingredient } = props;
     return (
         <div className={'pt-10 pl-10 pb-15 pr-10'}>
-            <div className={'text text-left text_type_main-large text_color_primary pt-3 mb-4'}>
+            <div className={'text text-center text_type_main-large text_color_primary pt-3 mb-4'}>
                 Детали ингредиента
             </div>
             <div className={styles.content}>

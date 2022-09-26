@@ -24,7 +24,7 @@ const CommonPropTypes = () => {
         ingredientsArrayType: PropTypes.arrayOf(ingredientTypeShape),
         headerLinkType: {
             icon: PropTypes.string.isRequired,
-            activeIcon: PropTypes.string.isRequired
+            to: PropTypes.string
         }
     };
 };

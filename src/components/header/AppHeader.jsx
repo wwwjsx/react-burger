@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from './AppHeader.module.css';
 import HeaderLink from './HeaderLink';
 import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
+import {useLocation} from 'react-router-dom';
 
 const AppHeader = () => {
-    const [activeIcon, setActiveIcon] = React.useState('Burger');
+    const { pathname } = useLocation();
+    const path = pathname || '/';
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        const icon = e.currentTarget.getAttribute('data-icon');
-        setActiveIcon(icon)
-    };
+    const isActive = useCallback((part) => {
+        const regEx = new RegExp(`^\/${part}`, 'i');
+        return path === part || path.match(regEx);
+    }, [path]);
 
     return (
         <header className={styles.header}>
@@ -19,16 +20,14 @@ const AppHeader = () => {
                     <div className={'col text-left'}>
                         <HeaderLink
                             icon={'Burger'}
-                            activeIcon={activeIcon}
-                            onClick={handleClick}
-                        >
+                            isActive={isActive('/')}
+                            to={'/'}>
                             Конструктор
                         </HeaderLink>
                         <HeaderLink
                             icon={'List'}
-                            activeIcon={activeIcon}
-                            onClick={handleClick}
-                        >
+                            isActive={isActive('order')}
+                            to={'/order/list'}>
                             Лента заказов
                         </HeaderLink>
                     </div>
@@ -38,8 +37,8 @@ const AppHeader = () => {
                     <div className={'col text-right'}>
                         <HeaderLink
                             icon={'Profile'}
-                            activeIcon={activeIcon}
-                            onClick={handleClick}>
+                            isActive={isActive('profile')}
+                            to={'/profile'}>
                             Личный кабинет
                         </HeaderLink>
                     </div>

@@ -1,52 +1,70 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './App.module.css';
 import '@ya.praktikum/react-developer-burger-ui-components';
 import AppHeader from '../header/AppHeader';
-import BurgerConstructor from '../constructor/BurgerConstructor';
-import BurgerIngredients from '../ingredients/BurgerIngredients';
-import LoadMask from '../modal/LoadMask';
-import AlertModal from '../modal/AlertModal';
-import { useDispatch, useSelector } from 'react-redux';
-import { RESET_INGREDIENT_REQUEST } from '../../services/actions/ingredients';
-import { getIngredients } from '../../utils/api/ingredients';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Route, Switch } from 'react-router-dom';
+import Login from '../pages/login/Login';
+import Register from '../pages/register/Register';
+import ResetPassword from '../pages/reset-password/ResetPassword';
+import ForgotPassword from '../pages/forgot-password/ForgotPassword';
+import Profile from '../pages/profile/Profile';
+import NotFound from '../pages/notfound/NotFound';
+import Main from '../main/Main';
+import {useDispatch, useSelector} from 'react-redux';
+import Ingredient from '../pages/ingredient/Ingredient';
+import { ingredientsThunk } from '../../services/slices/ingredients';
+import { useAuth } from '../../services/auth';
+import ProtectedRoute from '../route/ProtectedRoute';
 
 function App() {
     const dispatch = useDispatch();
-    const {
-        ingredientsFail,
-        ingredientsError,
-        ingredientsRequest
-    } = useSelector(state => state.ingredients);
+    const auth = useAuth();
+    const { ingredient } = useSelector(store => store.ingredients);
 
-    React.useEffect(() => {
-        dispatch(getIngredients());
+    // if application force refresh by F5 or other methods
+    useEffect(() => {
+        if (!auth.user) {
+            auth.refresh(true); // restore current user data
+        }
+        // eslint-disable-next-line
+    }, [auth.user]);
+
+    useEffect(() => {
+        dispatch(ingredientsThunk());
     }, [dispatch]);
-
-    // close alert popup
-    const handleCloseAlert = () => {
-        dispatch({ type: RESET_INGREDIENT_REQUEST });
-    };
 
     return (
         <div className={styles.App}>
             <AppHeader />
-            <div className={`container ${styles.container}`}>
-                <DndProvider backend={HTML5Backend}>
-                    <BurgerIngredients/>
-                    <div className={'col-split'}></div>
-                    <BurgerConstructor/>
-                </DndProvider>
-            </div>
-
-            {ingredientsRequest && <LoadMask />}
-
-            {ingredientsFail &&
-                <AlertModal  onClose={handleCloseAlert}>
-                    {ingredientsError}
-                </AlertModal>
-            }
+            <Switch>
+                <Route path={'/'} exact>
+                    <Main />
+                </Route>
+                <Route path={'/order/list'} exact>
+                    <div className={'container'}>{/* ORDER LIST */}</div>
+                </Route>
+                <Route path={'/login'} exact>
+                    <Login />
+                </Route>
+                <Route path={'/register'} exact>
+                    <Register />
+                </Route>
+                <Route path={'/forgot-password'} exact>
+                    <ForgotPassword />
+                </Route>
+                <Route path={'/reset-password'} exact>
+                    <ResetPassword />
+                </Route>
+                <ProtectedRoute path={'/profile'}>
+                    <Profile />
+                </ProtectedRoute>
+                <Route path={'/ingredients/:id'} exact>
+                    {ingredient ? <Main /> : <Ingredient/>}
+                </Route>
+                <Route path="*">
+                    <NotFound />
+                </Route>
+            </Switch>
         </div>
     );
 }
