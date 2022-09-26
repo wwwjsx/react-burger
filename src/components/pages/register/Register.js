@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {Button, EmailInput, Input, PasswordInput} from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import LoadMask from '../../modal/LoadMask';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerThunk } from '../../../services/slices/auth';
+import {useAuth} from "../../../services/auth";
 
 const Register = () => {
     const dispatch = useDispatch();
-    const auth = useSelector(store => store.auth );
+    const auth = useAuth();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -29,6 +30,11 @@ const Register = () => {
         e.preventDefault();
         dispatch(registerThunk(formData));
     };
+
+    // if user already logged in
+    if (auth.isLogged) {
+        return <Redirect to={'/'} />;
+    }
 
     return (
         <div className={`container form-wrapper`}>

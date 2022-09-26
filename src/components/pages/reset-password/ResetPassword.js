@@ -3,12 +3,13 @@ import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-component
 import LoadMask from "../../modal/LoadMask";
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPasswordThunk } from "../../../services/slices/auth";
-import {useHistory} from "react-router-dom";
+import {Redirect, useHistory} from "react-router-dom";
+import {useAuth} from "../../../services/auth";
 
 const ResetPassword = () => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const auth = useSelector(store => store.auth );
+    const auth = useAuth();
     const [formData, setFormData] = useState({
         password: '',
         token: ''
@@ -35,6 +36,11 @@ const ResetPassword = () => {
             }
         });
     };
+
+    // if user already logged in
+    if (auth.isLogged) {
+        return <Redirect to={'/'} />;
+    }
 
     return (
         <div className={`container form-wrapper`}>
