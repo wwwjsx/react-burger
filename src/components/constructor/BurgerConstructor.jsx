@@ -7,7 +7,7 @@ import { Button, CurrencyIcon }
     from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrop } from 'react-dnd';
 import LoadMask from '../modal/LoadMask';
-import AlertModal from '../modal/AlertModal';
+import Alert from '../modal/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import ElementWrapper from './ElementWrapper';
 import styles from './BurgerConstructor.module.css';
@@ -66,11 +66,6 @@ const BurgerConstructor = () => {
 
     }, [dispatch]);
 
-    // load random burger ingredients from ingredients
-    useEffect(() => {
-        dispatch(setIngredients(ingredients));
-    }, [dispatch, ingredients]);
-
     // load user order data
     const handleOrder = async () => {
         const ids = [];
@@ -115,16 +110,18 @@ const BurgerConstructor = () => {
     };
 
     // close alert modal popup
-    const handleCloseAlertModal = () => {
+    const handleCloseAlert = () => {
         dispatch(resetOrderRequest());
     };
 
     // scrollable element CSS classes
-    const scrollCls = React.useMemo(() => {
-        let cls = `${styles.scrollContent} custom-scroll`;
+    const contentCls = React.useMemo(() => {
+        let cls = `${styles.content} custom-scroll`;
 
         if (isHover && !isBunHover) {
-            cls += ` ${styles.dropHover}`;
+            cls += ` ${burger.ingredients.length > 0
+                ? styles.dropHover
+                : styles.dropEmptyHover}`;
         }
 
         return cls
@@ -134,60 +131,67 @@ const BurgerConstructor = () => {
         <div className={`${styles.column} pt-25`}>
             <div className={styles.dropBox} ref={dropRef}>
                 <div className={'mb-4'}>
-                    {burger.bun &&
-                        <ElementBun
-                            item={burger.bun}
-                            type={'top'}
-                            isHover={isBunHover}
-                        />
-                    }
+                    <ElementBun
+                        item={burger.bun}
+                        type={'top'}
+                        isHover={isBunHover}
+                    />
                 </div>
-                <div className={scrollCls}>
-                    {burger.ingredients.map((item, index) => {
-                        return <ElementWrapper
-                            key={item.uuid}
-                            item={item}
-                            index={index}
-                            moveCard={moveCard}
-                            handleClose={() => handleClose(item)}
-                        />
+                <div className={contentCls}>
+                    { burger.ingredients.length > 0 &&
+                        burger.ingredients.map((item, index) => {
+                            return <ElementWrapper
+                                key={item.uuid}
+                                item={item}
+                                index={index}
+                                moveCard={moveCard}
+                                handleClose={() => handleClose(item)}
+                            />
                     })}
+
+                    { burger.ingredients.length < 1 &&
+                        <div className={`empty ${styles.emptyElement} ${styles.middle}`}>
+                            Пожалуйста, перетащите сюда ингредиенты
+                        </div>
+                    }
                 </div>
                 <div className={'mt-4'}>
-                    {burger.bun &&
-                        <ElementBun
-                            item={burger.bun}
-                            type={'bottom'}
-                            isHover={isBunHover}
-                        />
-                    }
+                    <ElementBun
+                        item={burger.bun}
+                        type={'bottom'}
+                        isHover={isBunHover}
+                    />
                 </div>
             </div>
             <div className={`${styles.order} pt-10 pr-6 pb-6`}>
-                <span className={`${styles.price} text text_type_main-medium`}>
-                    {burger.totalPrice} <CurrencyIcon type="primary" />
-                </span>
-                <Button type="primary" size="large" onClick={handleOrder}>
-                    Оформить заказ
-                </Button>
-                {isOrderModal &&
-                    <Modal
-                        width={720}
-                        height={718}
-                        onClose={handleCloseModalOrder}
-                    >
-                        <OrderDetails order={order.order}/>
-                    </Modal>
-                }
+                { burger.bun && burger.ingredients.length > 0 &&
+                    <React.Fragment>
+                        <span className={`${styles.price} text text_type_main-medium`}>
+                            {burger.totalPrice} <CurrencyIcon type="primary" />
+                        </span>
+                        <Button type="primary" size="large" onClick={handleOrder}>
+                            Оформить заказ
+                        </Button>
+                        {isOrderModal &&
+                            <Modal
+                                width={720}
+                                height={718}
+                                onClose={handleCloseModalOrder}
+                            >
+                                <OrderDetails order={order.order}/>
+                            </Modal>
+                        }
 
-                {(order.request || auth.request) &&
-                    <LoadMask> Загрузка заказа ... </LoadMask>
-                }
+                        {(order.request || auth.request) &&
+                            <LoadMask> Загрузка заказа ... </LoadMask>
+                        }
 
-                {order.fail &&
-                    <AlertModal onClose={handleCloseAlertModal}>
-                        {order.message}
-                    </AlertModal>
+                        {order.fail &&
+                            <Alert onClose={handleCloseAlert}>
+                                {order.message}
+                            </Alert>
+                        }
+                    </React.Fragment>
                 }
             </div>
         </div>

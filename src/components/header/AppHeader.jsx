@@ -2,9 +2,10 @@ import React, { useCallback } from 'react';
 import styles from './AppHeader.module.css';
 import HeaderLink from './HeaderLink';
 import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
-import {useLocation} from 'react-router-dom';
+import { useHistory, Link, useLocation} from 'react-router-dom';
 
 const AppHeader = () => {
+    const history = useHistory();
     const { pathname } = useLocation();
     const path = pathname || '/';
 
@@ -32,7 +33,7 @@ const AppHeader = () => {
                         </HeaderLink>
                     </div>
                     <div className={'col text-center'}>
-                        <Logo />
+                        <Link to={'/'}><Logo/></Link>
                     </div>
                     <div className={'col text-right'}>
                         <HeaderLink

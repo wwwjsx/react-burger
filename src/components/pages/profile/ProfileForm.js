@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Input, EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch } from 'react-redux';
 import LoadMask from '../../modal/LoadMask';
-import {setAuthError, updateUserThunk} from '../../../services/slices/auth';
+import { setAuthError, updateUserThunk } from '../../../services/slices/auth';
 import { getCookie } from '../../../utils/Cookie';
 import { useAuth } from '../../../services/auth';
+import { useForm } from '../../../services/hooks/useForm';
 
 const ProfileForm = () => {
     const dispatch = useDispatch();
@@ -15,26 +16,15 @@ const ProfileForm = () => {
         email: '',
         password: ''
     };
-
-    const [profile, setProfile] = useState(initialData);
+    const { values, handleChange, setValues } = useForm(initialData);
 
     useEffect(() => {
-        setProfile(initialData);
+        setValues(initialData);
     }, [auth.user]);
-
-    const handleChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-
-        setProfile({
-            ...profile,
-            [name]: value
-        });
-    };
 
     const handleCancel = (e) => {
         e.preventDefault();
-        setProfile({ ...auth.user, password: ''});
+        setValues({ ...auth.user, password: ''});
     };
 
     const handleSubmit = async (e) => {
@@ -58,7 +48,7 @@ const ProfileForm = () => {
         dispatch(updateUserThunk({
             method: 'PATCH',
             token: accessToken,
-            body: {...profile}
+            body: {...values}
         }));
     };
 
@@ -72,7 +62,7 @@ const ProfileForm = () => {
             }
             <div className={'form-field mb-6'}>
                 <Input
-                    value={profile.name}
+                    value={values.name}
                     placeholder={'Имя'}
                     onChange={handleChange}
                     name={'name'}
@@ -80,14 +70,14 @@ const ProfileForm = () => {
             </div>
             <div className={'form-field mb-6'}>
                 <EmailInput
-                    value={profile.email}
+                    value={values.email}
                     onChange={handleChange}
                     name={'email'}
                 />
             </div>
             <div className={`form-field mb-20`}>
                 <PasswordInput
-                    value={profile.password}
+                    value={values.password}
                     name={'password'}
                     onChange={handleChange}
                 />

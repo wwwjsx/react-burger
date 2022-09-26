@@ -4,7 +4,7 @@ import styles from '../app/App.module.css';
 import BurgerIngredients from '../ingredients/BurgerIngredients';
 import BurgerConstructor from '../constructor/BurgerConstructor';
 import LoadMask from '../modal/LoadMask';
-import AlertModal from '../modal/AlertModal';
+import Alert from '../modal/Alert';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetIngredientsRequest } from '../../services/slices/ingredients';
@@ -31,9 +31,9 @@ const Main = () => {
             {ingredients.request && <LoadMask />}
 
             {ingredients.fail &&
-                <AlertModal  onClose={handleCloseAlert}>
+                <Alert  onClose={handleCloseAlert}>
                     {ingredients.message}
-                </AlertModal>
+                </Alert>
             }
         </React.Fragment>
     );

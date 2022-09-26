@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import LoadMask from '../../modal/LoadMask';
-import { Link, useHistory } from 'react-router-dom';
+import {Link, useHistory, useLocation} from 'react-router-dom';
 import { useDispatch, useSelector} from 'react-redux';
 import { forgotPasswordThunk, setAuthError } from '../../../services/slices/auth';
 
 const ForgotPassword = () => {
+    const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
     const auth = useSelector(store => store.auth );
     const [formData, setFormData] = useState({
         email: ''
     });
+
+    console.log('LOCATION:', location);
 
     const handleChange = (e) => {
         const name = e.target.name;
@@ -36,7 +39,10 @@ const ForgotPassword = () => {
             // if success done, should redirect to reset-password
             if (res && res.payload && res.payload.success) {
                 history.replace({
-                    pathname: '/reset-password'
+                    pathname: '/reset-password',
+                    state: {
+                        from: 'forgot-password'
+                    }
                 });
             }
         });

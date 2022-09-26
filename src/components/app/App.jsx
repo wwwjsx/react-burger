@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styles from './App.module.css';
 import '@ya.praktikum/react-developer-burger-ui-components';
 import AppHeader from '../header/AppHeader';
-import { Route, Switch } from 'react-router-dom';
+import {Route, Switch, useHistory, useLocation} from 'react-router-dom';
 import Login from '../pages/login/Login';
 import Register from '../pages/register/Register';
 import ResetPassword from '../pages/reset-password/ResetPassword';
@@ -15,11 +15,20 @@ import Ingredient from '../pages/ingredient/Ingredient';
 import { ingredientsThunk } from '../../services/slices/ingredients';
 import { useAuth } from '../../services/auth';
 import ProtectedRoute from '../route/ProtectedRoute';
+import Modal from "../modal/Modal";
+import IngredientDetails from "../ingredients/IngredientDetails";
 
 function App() {
+    const history = useHistory();
     const dispatch = useDispatch();
+    const location = useLocation();
     const auth = useAuth();
-    const { ingredient } = useSelector(store => store.ingredients);
+    const state = location.state || {};
+    const { ingredient } = state;
+
+    const onBack = () => {
+        history.goBack();
+    };
 
     // if application force refresh by F5 or other methods
     useEffect(() => {
@@ -34,38 +43,54 @@ function App() {
     }, [dispatch]);
 
     return (
-        <div className={styles.App}>
-            <AppHeader />
-            <Switch>
-                <Route path={'/'} exact>
-                    <Main />
-                </Route>
-                <Route path={'/order/list'} exact>
-                    <div className={'container'}>{/* ORDER LIST */}</div>
-                </Route>
-                <Route path={'/login'} exact>
-                    <Login />
-                </Route>
-                <Route path={'/register'} exact>
-                    <Register />
-                </Route>
-                <Route path={'/forgot-password'} exact>
-                    <ForgotPassword />
-                </Route>
-                <Route path={'/reset-password'} exact>
-                    <ResetPassword />
-                </Route>
-                <ProtectedRoute path={'/profile'}>
-                    <Profile />
-                </ProtectedRoute>
-                <Route path={'/ingredients/:id'} exact>
-                    {ingredient ? <Main /> : <Ingredient/>}
-                </Route>
-                <Route path="*">
-                    <NotFound />
-                </Route>
-            </Switch>
-        </div>
+        <React.Fragment>
+            <div className={styles.App}>
+                <AppHeader />
+                <Switch>
+                    <Route path={'/'} exact>
+                        <Main />
+                    </Route>
+                    <Route path={'/order/list'} exact>
+                        <div className={'container'}>{/* ORDER LIST */}</div>
+                    </Route>
+                    <Route path={'/login'} exact>
+                        <Login />
+                    </Route>
+                    <Route path={'/register'} exact>
+                        <Register />
+                    </Route>
+                    <Route path={'/forgot-password'} exact>
+                        <ForgotPassword />
+                    </Route>
+                    <Route path={'/reset-password'} exact>
+                        <ResetPassword />
+                    </Route>
+                    <ProtectedRoute path={'/profile'}>
+                        <Profile />
+                    </ProtectedRoute>
+                    <Route path={'/ingredients/:id'} exact>
+                        {ingredient ? <Main /> : <Ingredient/>}
+                    </Route>
+                    <Route path="*">
+                        <NotFound />
+                    </Route>
+                </Switch>
+            </div>
+
+            <Route path='/ingredients/:id' exact={true}>
+                {ingredient &&
+                    <Modal
+                        width={720}
+                        height={540}
+                        onClose={onBack}
+                    >
+                        {ingredient && ingredient._id &&
+                            <IngredientDetails ingredient={ingredient}/>
+                        }
+                    </Modal>
+                }
+            </Route>
+        </React.Fragment>
     );
 }
 

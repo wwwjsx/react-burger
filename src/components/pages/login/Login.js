@@ -1,42 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { EmailInput, PasswordInput,  Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import {Link, Redirect, useHistory} from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../services/auth';
 import LoadMask from '../../modal/LoadMask';
+import { useForm } from '../../../services/hooks/useForm';
 
 const Login = () => {
-    const history = useHistory();
-    const auth = useAuth();
-    const [formData, setFormData] = useState({
+    const { values, handleChange } = useForm({
         email: '',
         password: ''
     });
 
-    const handleChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+    const location = useLocation();
+    const auth = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        auth.signIn(formData).then((res) => {
-            if (res.payload && res.payload.success) {
-                history.push({
-                    pathname: '/profile'
-                });
-            }
-        });
+        auth.signIn(values);
     };
 
     // if user already logged in
     if (auth.isLogged) {
-        return <Redirect to={'/'} />;
+        const state = location.state || {};
+
+        return <Redirect to={{ pathname: state.from, state: state }} />;
     }
 
     return (
@@ -52,14 +39,14 @@ const Login = () => {
                     }
                     <div className={`form-field mb-6`}>
                         <EmailInput
-                            value={formData.email}
+                            value={values.email}
                             name={'email'}
                             onChange={handleChange}
                         />
                     </div>
                     <div className={`form-field mb-6`}>
                         <PasswordInput
-                            value={formData.password}
+                            value={values.password}
                             name={'password'}
                             onChange={handleChange}
                         />

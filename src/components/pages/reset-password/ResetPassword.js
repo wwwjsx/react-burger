@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import LoadMask from "../../modal/LoadMask";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { resetPasswordThunk } from "../../../services/slices/auth";
-import {Redirect, useHistory} from "react-router-dom";
+import {Redirect, useHistory, useLocation} from "react-router-dom";
 import {useAuth} from "../../../services/auth";
 
 const ResetPassword = () => {
+    const location = useLocation();
     const dispatch = useDispatch();
     const history = useHistory();
     const auth = useAuth();
@@ -37,8 +38,11 @@ const ResetPassword = () => {
         });
     };
 
+    // reset password will redirect to main if we didn't came from forgot-password
+    const from = location.state && location.state.from;
+
     // if user already logged in
-    if (auth.isLogged) {
+    if (auth.isLogged || from !== 'forgot-password') {
         return <Redirect to={'/'} />;
     }
 

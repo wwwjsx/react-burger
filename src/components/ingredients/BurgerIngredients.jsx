@@ -12,8 +12,6 @@ const BurgerIngredients = () => {
     const history = useHistory();
     const { ingredients } = useSelector(store => store.ingredients);
     const [activeTab, setActiveTab] = React.useState('bun');
-    const ingredient = useSelector(store => store.ingredients.ingredient);
-    const [isModal, setIsModal] = React.useState(false);
     const refMain = React.useRef();
     const refSauce = React.useRef();
     const refBun = React.useRef();
@@ -29,19 +27,14 @@ const BurgerIngredients = () => {
 
     // show ingredient item click event handler
     const handleClickIngredient = (item) => {
-        dispatch(setIngredient(item));
-
-        // show ingredients page
-        setIsModal(true);
+        // dispatch(setIngredient(item));
 
         history.push({
-            pathname: `/ingredients/${item._id}`
+            pathname: `/ingredients/${item._id}`,
+            state: {
+                ingredient: item
+            }
         });
-    };
-
-    // close ingredient modal popup
-    const handleCloseIngredientModal = () => {
-        setIsModal(false);
     };
 
     // handle constructor ingredients scroll event
@@ -120,18 +113,6 @@ const BurgerIngredients = () => {
                     onClick={handleClickIngredient}
                 />
             </div>
-
-            {isModal &&
-                <Modal
-                    width={720}
-                    height={540}
-                    onClose={handleCloseIngredientModal}
-                >
-                    {ingredient && ingredient._id &&
-                        <IngredientDetails ingredient={ingredient}/>
-                    }
-                </Modal>
-            }
         </div>
     );
 };
