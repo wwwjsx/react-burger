@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { BUN_TYPE, MOVE_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
 import Modal from '../modal/Modal';
@@ -16,7 +16,8 @@ import {
     removeIngredient,
     setBun,
     addIngredient,
-    moveIngredient
+    moveIngredient,
+    clearIngredients
 } from '../../services/slices/burger';
 import { orderThunk, resetOrderRequest } from '../../services/slices/order';
 import { useAuth } from '../../services/auth';
@@ -98,6 +99,7 @@ const BurgerConstructor = () => {
             })).then((res) => {
                 if (res && res.payload && res.payload.success) {
                     setIsOrderModal(true);
+                    dispatch(clearIngredients());
                 }
             });
         } else {
@@ -184,27 +186,30 @@ const BurgerConstructor = () => {
                         <Button type="primary" size="large" onClick={handleOrder}>
                             Оформить заказ
                         </Button>
-                        {isOrderModal &&
-                            <Modal
-                                width={720}
-                                height={718}
-                                onClose={handleCloseModalOrder}
-                            >
-                                <OrderDetails order={order.order}/>
-                            </Modal>
-                        }
-
-                        {(order.request || auth.request) &&
-                            <LoadMask> Загрузка заказа ... </LoadMask>
-                        }
-
-                        {order.fail &&
-                            <Alert onClose={handleCloseAlert}>
-                                {order.message}
-                            </Alert>
-                        }
                     </React.Fragment>
                 }
+
+                <React.Fragment>
+                    {isOrderModal &&
+                        <Modal
+                            width={720}
+                            height={718}
+                            onClose={handleCloseModalOrder}
+                        >
+                            <OrderDetails order={order.order}/>
+                        </Modal>
+                    }
+
+                    {(order.request || auth.request) &&
+                        <LoadMask> Загрузка заказа ... </LoadMask>
+                    }
+
+                    {order.fail &&
+                        <Alert onClose={handleCloseAlert}>
+                            {order.message}
+                        </Alert>
+                    }
+                </React.Fragment>
             </div>
         </div>
     );

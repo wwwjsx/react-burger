@@ -116,7 +116,12 @@ const burgerSlice = createSlice({
             state.bun = bun;
 
             setTotalPrice(state);
-        }
+        },
+
+        clearIngredients(state) {
+            state.bun = null;
+            state.ingredients = [];
+        },
     },
 });
 
@@ -126,6 +131,7 @@ export const {
     removeIngredient,
     setBun,
     addIngredient,
-    moveIngredient
+    moveIngredient,
+    clearIngredients
 } = actions;
 export default reducer;
