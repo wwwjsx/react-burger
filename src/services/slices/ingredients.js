@@ -1,6 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ingredientsApi } from '../../utils/api/api';
 import { BUN_TYPE } from '../../utils/common/Contstants';
+import {
+    SET_INGREDIENT_COUNT_BUN,
+    ADD_INGREDIENT_COUNT,
+    REMOVE_INGREDIENT_COUNT
+} from '../actions/ingredients';
 
 export const ingredientsThunk = createAsyncThunk(
     'ingredients/load',
@@ -48,7 +53,7 @@ const ingredientsSlice = createSlice({
 
             if (find) {
                 switch(type) {
-                    case 'set-bun': {
+                    case SET_INGREDIENT_COUNT_BUN: {
                        ingredients
                            .filter(item => item.type === BUN_TYPE)
                            .forEach(item => {
@@ -58,13 +63,13 @@ const ingredientsSlice = createSlice({
                         find.count = 1;
                     }
                     break;
-                    case 'add-item': {
+                    case ADD_INGREDIENT_COUNT: {
                         let count = find.count || 0;
                         count ++;
                         find.count = count;
                     }
                     break;
-                    case 'remove-item': {
+                    case REMOVE_INGREDIENT_COUNT: {
                         let count = find.count || 0;
                         count --;
                         find.count = count;

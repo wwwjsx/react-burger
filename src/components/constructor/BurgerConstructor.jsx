@@ -22,7 +22,12 @@ import {
 import { orderThunk, resetOrderRequest } from '../../services/slices/order';
 import { useAuth } from '../../services/auth';
 import { useHistory } from 'react-router-dom';
-import {resetIngredientsCount, updateIngredientCount} from '../../services/slices/ingredients';
+import { resetIngredientsCount, updateIngredientCount } from '../../services/slices/ingredients';
+import {
+    ADD_INGREDIENT_COUNT,
+    REMOVE_INGREDIENT_COUNT,
+    SET_INGREDIENT_COUNT_BUN
+} from '../../services/actions/ingredients';
 
 const BurgerConstructor = () => {
     const dispatch = useDispatch();
@@ -53,14 +58,14 @@ const BurgerConstructor = () => {
                 dispatch(setBun({...item}));
                 dispatch(updateIngredientCount({
                     id: item._id,
-                    type: 'set-bun',
+                    type: SET_INGREDIENT_COUNT_BUN,
                 }));
             } else {
                 item.uuid = uuidv4();
                 dispatch(addIngredient({...item}));
                 dispatch(updateIngredientCount({
                     id: item._id,
-                    type: 'add-item',
+                    type: ADD_INGREDIENT_COUNT,
                 }));
             }
         }
@@ -115,7 +120,7 @@ const BurgerConstructor = () => {
         dispatch(removeIngredient(item));
         dispatch(updateIngredientCount({
             id: item._id,
-            type: 'remove-item',
+            type: REMOVE_INGREDIENT_COUNT,
         }));
     };
 
