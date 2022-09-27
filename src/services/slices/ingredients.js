@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ingredientsApi } from '../../utils/api/api';
+import { BUN_TYPE } from '../../utils/common/Contstants';
 
 export const ingredientsThunk = createAsyncThunk(
     'ingredients/load',
@@ -30,6 +31,40 @@ const ingredientsSlice = createSlice({
             state.ingredient = action.payload;
         },
 
+        updateIngredientCount(state, action) {
+            const { type, id } = action.payload;
+            const ingredients = [...state.ingredients];
+            const find = ingredients.find(item => item._id === id);
+
+            if (find) {
+                switch(type) {
+                    case 'set-bun': {
+                       ingredients
+                           .filter(item => item.type === BUN_TYPE)
+                           .forEach(item => {
+                               item.count = 0;
+                           });
+
+                        find.count = 1;
+                    }
+                    break;
+                    case 'add-item': {
+                        let count = find.count || 0;
+                        count ++;
+                        find.count = count;
+                    }
+                    break;
+                    case 'remove-item': {
+                        let count = find.count || 0;
+                        count --;
+                        find.count = count;
+                    }
+                    break;
+                    default:
+                }
+            }
+        },
+
         resetIngredientsRequest(state) {
             state.request = false;
             state.message = null;
@@ -56,5 +91,5 @@ const ingredientsSlice = createSlice({
 });
 
 const { actions, reducer } = ingredientsSlice;
-export const { setIngredient, resetIngredientsRequest } = actions;
+export const { setIngredient, resetIngredientsRequest, updateIngredientCount } = actions;
 export default reducer;

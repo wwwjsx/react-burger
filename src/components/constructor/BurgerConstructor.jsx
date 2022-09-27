@@ -13,7 +13,6 @@ import ElementWrapper from './ElementWrapper';
 import styles from './BurgerConstructor.module.css';
 import ElementBun from './ElementBun';
 import {
-    setIngredients,
     removeIngredient,
     setBun,
     addIngredient,
@@ -21,7 +20,8 @@ import {
 } from '../../services/slices/burger';
 import { orderThunk, resetOrderRequest } from '../../services/slices/order';
 import { useAuth } from '../../services/auth';
-import {useHistory} from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import { updateIngredientCount } from '../../services/slices/ingredients';
 
 const BurgerConstructor = () => {
     const dispatch = useDispatch();
@@ -50,9 +50,17 @@ const BurgerConstructor = () => {
 
             if (item.type === BUN_TYPE) {
                 dispatch(setBun({...item}));
+                dispatch(updateIngredientCount({
+                    id: item._id,
+                    type: 'set-bun',
+                }));
             } else {
                 item.uuid = uuidv4();
                 dispatch(addIngredient({...item}));
+                dispatch(updateIngredientCount({
+                    id: item._id,
+                    type: 'add-item',
+                }));
             }
         }
     }), [ingredients]);
@@ -101,7 +109,11 @@ const BurgerConstructor = () => {
 
     // handle "remove" constructor element
     const handleClose = (item) => {
-      dispatch(removeIngredient(item));
+        dispatch(removeIngredient(item));
+        dispatch(updateIngredientCount({
+            id: item._id,
+            type: 'remove-item',
+        }));
     };
 
     // close order modal popup
