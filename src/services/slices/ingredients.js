@@ -31,6 +31,16 @@ const ingredientsSlice = createSlice({
             state.ingredient = action.payload;
         },
 
+        resetIngredientsCount(state) {
+            const ingredients = [...state.ingredients];
+
+            ingredients.forEach((item) => {
+                item.count = 0;
+            });
+
+            state.ingredients = ingredients;
+        },
+
         updateIngredientCount(state, action) {
             const { type, id } = action.payload;
             const ingredients = [...state.ingredients];
@@ -91,5 +101,5 @@ const ingredientsSlice = createSlice({
 });
 
 const { actions, reducer } = ingredientsSlice;
-export const { setIngredient, resetIngredientsRequest, updateIngredientCount } = actions;
+export const { setIngredient, resetIngredientsRequest, updateIngredientCount, resetIngredientsCount } = actions;
 export default reducer;

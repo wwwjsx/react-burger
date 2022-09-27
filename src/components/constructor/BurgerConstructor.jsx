@@ -22,7 +22,7 @@ import {
 import { orderThunk, resetOrderRequest } from '../../services/slices/order';
 import { useAuth } from '../../services/auth';
 import { useHistory } from 'react-router-dom';
-import { updateIngredientCount } from '../../services/slices/ingredients';
+import {resetIngredientsCount, updateIngredientCount} from '../../services/slices/ingredients';
 
 const BurgerConstructor = () => {
     const dispatch = useDispatch();
@@ -100,6 +100,7 @@ const BurgerConstructor = () => {
                 if (res && res.payload && res.payload.success) {
                     setIsOrderModal(true);
                     dispatch(clearIngredients());
+                    dispatch(resetIngredientsCount());
                 }
             });
         } else {
