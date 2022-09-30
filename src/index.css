@@ -52,6 +52,31 @@ a {
   text-align: right;
 }
 
+.text-error {
+  color: #ff0000;
+}
+
 .display-flex {
   display: flex;
+}
+
+.default-link {
+  color: #4C4CFF;
+}
+
+/* form wrapper for login, register, forgot-password, reset-password */
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  align-items: center;
+}
+
+.form-box {
+  width: 480px;
+}
+
+.form-field .input_size_default {
+  width: 480px;
 }

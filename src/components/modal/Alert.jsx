@@ -3,7 +3,7 @@ import Modal from './Modal';
 import styles from './Modal.module.css';
 import PropTypes from 'prop-types';
 
-const AlertModal = (props) => {
+const Alert = (props) => {
     const title = props.title || 'Ошибка';
     return (
         <Modal
@@ -23,10 +23,10 @@ const AlertModal = (props) => {
     );
 }
 
-AlertModal.propTypes = {
+Alert.propTypes = {
     title: PropTypes.string,
     children: PropTypes.node,
     onClose: PropTypes.func
 };
 
-export default AlertModal;
+export default Alert;

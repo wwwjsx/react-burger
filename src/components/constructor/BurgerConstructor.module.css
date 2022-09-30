@@ -5,7 +5,7 @@
     flex: 1;
 }
 
-.scrollContent {
+.content {
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 80px;
@@ -16,11 +16,16 @@
     background-color: #212128;
 }
 
+.dropEmptyHover :global(.empty) {
+    background-color: #3e3e4f;
+}
+
 .dropBox {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     overflow: hidden;
+    min-height: 300px;
 }
 
 .order {
@@ -64,6 +69,37 @@
     cursor: move;
 }
 
-.bunHover {
-    background-color: #212128;
+.hover :global(.constructor-element) {
+    background-color: #3e3e4f;
+}
+
+.emptyElement {
+    background-color: #2F2F37;
+    height: 80px;
+    text-align: center;
+    width: 536px;
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.emptyElement .bunHover {
+    background-color: red;
+}
+
+.hoverEmpty {
+    background-color: #3e3e4f;
+}
+
+.top {
+    border-radius: var(--top-constructor-item-border-radius);
+}
+
+.bottom {
+    border-radius: var(--bottom-constructor-item-border-radius);
+}
+
+.middle {
+    border-radius: var(--common-border-radius-s);
 }

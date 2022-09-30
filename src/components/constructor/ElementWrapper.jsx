@@ -3,6 +3,8 @@ import {useDrag, useDrop} from 'react-dnd';
 import styles from './BurgerConstructor.module.css';
 import {ConstructorElement, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import { BUN_TYPE, SORT_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
+import CommonPropTypes from '../../utils/common/PropTypes';
+import PropTypes from 'prop-types';
 
 const ElementWrapper = ({ item, handleClose, index, moveCard }) => {
     const ref = React.useRef(null);
@@ -95,5 +97,12 @@ const ElementWrapper = ({ item, handleClose, index, moveCard }) => {
         </div>
     );
 };
+
+ElementWrapper.propTypes = {
+    handleClose: PropTypes.func.isRequired,
+    moveCard: PropTypes.func.isRequired,
+    index: PropTypes.number.isRequired,
+    item: CommonPropTypes.ingredientShapeType.isRequired
+}
 
 export default ElementWrapper;

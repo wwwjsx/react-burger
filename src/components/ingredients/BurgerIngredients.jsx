@@ -4,14 +4,14 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/Modal';
 import IngredientDetails from './IngredientDetails';
 import {useDispatch, useSelector} from 'react-redux';
-import {SET_INGREDIENT} from '../../services/actions/ingredients';
-import IngredientTab from "./IngredientTab";
+import IngredientTab from './IngredientTab';
+import {setIngredient} from "../../services/slices/ingredients";
+import {useHistory} from "react-router-dom";
 
 const BurgerIngredients = () => {
+    const history = useHistory();
     const { ingredients } = useSelector(store => store.ingredients);
     const [activeTab, setActiveTab] = React.useState('bun');
-    const ingredient = useSelector(store => store.ingredients.ingredient);
-    const [isModal, setIsModal] = React.useState(false);
     const refMain = React.useRef();
     const refSauce = React.useRef();
     const refBun = React.useRef();
@@ -20,22 +20,21 @@ const BurgerIngredients = () => {
     // tab active event handler
     const handleActiveTab = (tab, ref) => {
         setActiveTab(tab);
-        ref.current.scrollIntoView({behavior: 'smooth'});
+        ref.current.scrollIntoView({
+            behavior: 'smooth'
+        });
     };
 
     // show ingredient item click event handler
     const handleClickIngredient = (item) => {
-        dispatch({
-            type: SET_INGREDIENT,
-            payload: item
-        });
-        // show ingredient modal popup
-        setIsModal(true);
-    };
+        // dispatch(setIngredient(item));
 
-    // close ingredient modal popup
-    const handleCloseIngredientModal = () => {
-        setIsModal(false);
+        history.push({
+            pathname: `/ingredients/${item._id}`,
+            state: {
+                ingredient: item
+            }
+        });
     };
 
     // handle constructor ingredients scroll event
@@ -114,18 +113,6 @@ const BurgerIngredients = () => {
                     onClick={handleClickIngredient}
                 />
             </div>
-
-            {isModal &&
-                <Modal
-                    width={720}
-                    height={540}
-                    onClose={handleCloseIngredientModal}
-                >
-                    {ingredient && ingredient._id &&
-                        <IngredientDetails ingredient={ingredient}/>
-                    }
-                </Modal>
-            }
         </div>
     );
 };
