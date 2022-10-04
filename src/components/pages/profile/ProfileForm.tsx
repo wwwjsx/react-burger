@@ -11,7 +11,7 @@ import { Button } from '../../Button';
 const ProfileForm:FC = () => {
     const dispatch = useDispatch();
     const auth = useAuth();
-    const user = typeof auth.user === 'object' ? auth.user : {};
+    const user = auth?.user ?? {};
     const initialData = auth.user ?
         { ...user, password: ''} : {
         name: '',

@@ -4,6 +4,8 @@ export type LocationState = {
     state: any;
 }
 
+export type TMethods = 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH';
+
 export type TLogin = {
     email: string;
     password: string;

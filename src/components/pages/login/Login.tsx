@@ -23,9 +23,10 @@ const Login:FC = () => {
 
     // if user already logged in
     if (auth.isLogged) {
-        const state = location.state as LocationState;
+        const state = location.state as LocationState || {};
+        const from = state.from || '/';
 
-        return <Redirect to={{ pathname: state.from, state: state }} />;
+        return <Redirect to={{ pathname: from, state: state }} />;
     }
 
     return (

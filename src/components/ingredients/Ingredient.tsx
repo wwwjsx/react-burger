@@ -31,7 +31,7 @@ const Ingredient:FC<IIngredient> = (props) => {
             <div
                 className={`${styles.thumb} ml-4 mr-4`}
                 style={{backgroundImage: `url(${item.image})` }}>
-                { typeof item.count === 'number' && Number(item.count) > 0 &&
+                { typeof item.count === 'number' && item.count > 0 &&
                     <Counter count={item.count} size="default" />
                 }
             </div>

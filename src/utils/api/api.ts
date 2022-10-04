@@ -1,7 +1,7 @@
 import { checkResponse } from '../Response';
 import {
     TOrders, TUpdateUser, TLogin, TLogout, TToken,
-    TRegister, TResetPassword, TForgotPassword, TUser
+    TRegister, TResetPassword, TForgotPassword, TUser, TMethods
 } from '../type';
 import {
     GET_USER_URL, INGREDIENTS_URL,
@@ -21,7 +21,7 @@ const post = (params: {}): object => {
     }
 };
 
-const auth = (method: 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH', params: { token: string | null, body?: any }): object => {
+const auth = (method: TMethods, params: { token: string | null, body?: any }): object => {
     const config = {
         method,
         mode: 'cors',
