@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { BUN_TYPE, MOVE_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
+import { BUN_TYPE, MOVE_COMPONENT_DRAG_TYPE } from '../../services/constants/common';
 import Modal from '../modal/Modal';
 import OrderDetails from './OrderDetails';
 import { CurrencyIcon }
@@ -20,14 +20,14 @@ import {
     clearIngredients
 } from '../../services/slices/burger';
 import { orderThunk, resetOrderRequest } from '../../services/slices/order';
-import { useAuth } from '../../services/auth';
+import { useAuth } from '../../services/hooks/auth';
 import { useHistory } from 'react-router-dom';
 import { resetIngredientsCount, updateIngredientCount } from '../../services/slices/ingredients';
 import {
     ADD_INGREDIENT_COUNT,
     REMOVE_INGREDIENT_COUNT,
     SET_INGREDIENT_COUNT_BUN
-} from '../../services/actions/ingredients';
+} from '../../services/constants/ingredients';
 import {TIngredient, TIngredientUid} from '../../utils/type';
 import { Button } from '../Button';
 
@@ -89,6 +89,7 @@ const BurgerConstructor:FC = () => {
         // collect random bun id
         if (burger.bun) {
             ids.push(burger.bun._id);
+            ids.push(burger.bun._id);
         }
 
         // collect random fillings id
@@ -99,10 +100,13 @@ const BurgerConstructor:FC = () => {
         }
 
         if (auth.isLogged) {
-            await auth.refresh();
+            const result = await auth.refresh();
 
             dispatch(orderThunk({
-                ingredients: ids
+                body: {
+                    ingredients: ids
+                },
+                token: result.accessToken
             })).then((res) => {
                 if (res && res.payload && res.payload.success) {
                     setIsOrderModal(true);

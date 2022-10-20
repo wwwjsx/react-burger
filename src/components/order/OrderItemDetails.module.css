@@ -1,0 +1,45 @@
+.item {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 16px;
+}
+
+.item:last-child {
+    margin-bottom: 0;
+}
+
+.itemTitle {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.thumb {
+    width: 70px;
+    height: 70px;
+    background-position: center center;
+    border: 2px solid #5341E4;
+    border-radius: 50%;
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.name {
+    text-overflow:ellipsis;
+    overflow:hidden;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+}
+
+.items {
+    max-height: 300px;
+}

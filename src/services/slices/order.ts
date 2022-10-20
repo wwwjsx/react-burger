@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { orderApi } from '../../utils/api/api';
-import { TOrders, TOrderState } from '../../utils/type';
+import { TOrdersIngredients, TOrdersIngredientsState, TToken} from '../../utils/type';
 
 export const orderThunk = createAsyncThunk(
     'order/order',
-    async (params:TOrders, thunkApi) => {
+    async (params:TToken & { body: TOrdersIngredients }, thunkApi) => {
         const { rejectWithValue } = thunkApi;
 
         try {
@@ -16,7 +16,7 @@ export const orderThunk = createAsyncThunk(
     }
 );
 
-const initialState:TOrderState = {
+const initialState:TOrdersIngredientsState = {
     order: null,
     request: false,
     message: null,
@@ -27,7 +27,7 @@ const orderSlice = createSlice({
     name: 'order',
     initialState,
     reducers: {
-        resetOrderRequest(state: TOrderState) {
+        resetOrderRequest(state: TOrdersIngredientsState) {
             state.request = false;
             state.message = null;
             state.failed = false;
@@ -36,17 +36,17 @@ const orderSlice = createSlice({
 
     extraReducers: (builder) => {
         builder
-            .addCase(orderThunk.pending, (state: TOrderState) => {
+            .addCase(orderThunk.pending, (state: TOrdersIngredientsState) => {
                 state.request = true;
                 state.message = null;
             })
-            .addCase(orderThunk.fulfilled, (state: TOrderState, action) => {
+            .addCase(orderThunk.fulfilled, (state: TOrdersIngredientsState, action) => {
                 state.order = action.payload.order;
                 state.request = false;
                 state.failed = false;
                 state.message = null;
             })
-            .addCase(orderThunk.rejected, (state: TOrderState, action: any) => {
+            .addCase(orderThunk.rejected, (state: TOrdersIngredientsState, action: any) => {
                 state.request = false;
                 state.failed = true;
                 state.message = action.payload;

@@ -26,8 +26,8 @@ const AppHeader:FC = () => {
                         </HeaderLink>
                         <HeaderLink
                             icon={'List'}
-                            isActive={isActive('order')}
-                            to={'/order/list'}>
+                            isActive={isActive('feed')}
+                            to={'/feed'}>
                             Лента заказов
                         </HeaderLink>
                     </div>

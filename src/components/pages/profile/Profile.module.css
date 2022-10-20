@@ -3,6 +3,7 @@
     flex-direction: row;
     flex: 1;
     padding-top: 100px;
+    overflow: hidden;
 }
 
 .nav {

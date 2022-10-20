@@ -2,7 +2,7 @@ import React, {FC, SyntheticEvent} from 'react';
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from 'react-dnd';
 import styles from './BurgerConstructor.module.css';
 import {ConstructorElement, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import { BUN_TYPE, SORT_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
+import { BUN_TYPE, SORT_COMPONENT_DRAG_TYPE } from '../../services/constants/common';
 import {TIngredient, TIngredientIndex} from '../../utils/type';
 
 interface IElementWrapper {

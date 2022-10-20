@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    flex: 1;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+}
+
+.split {
+    width: 60px;
+}
+
+.progress {
+    display: inline-flex;
+}
+
+.progress ul {
+    margin: 0;
+    padding: 0;
+}
+
+.progress ul li {
+    list-style: none;
+    margin-bottom: 8px;
+    font-family: Iceland;
+    font-weight: normal;
+    font-size: 28px;
+    line-height: .86;
+}
+
+.ready li {
+    color: #00CCCC;
+}

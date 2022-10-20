@@ -10,7 +10,7 @@ import {
     tokenApi
 } from '../../utils/api/api';
 import { removeCookie, setCookie} from '../../utils/Cookie';
-import { COOKIE_ACCESS_TOKEN_EXPIRE } from '../../utils/common/Contstants';
+import { COOKIE_ACCESS_TOKEN_EXPIRE } from '../../services/constants/common';
 import { getSession, removeSession, setSession } from '../../utils/Session';
 import {
     TAuthState,

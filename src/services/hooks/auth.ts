@@ -1,9 +1,9 @@
-import { loginThunk, logoutThunk, tokenThunk, userThunk } from './slices/auth';
-import { getCookie } from '../utils/Cookie';
-import { getSession } from '../utils/Session';
+import { loginThunk, logoutThunk, tokenThunk, userThunk } from '../slices/auth';
+import { getCookie } from '../../utils/Cookie';
+import { getSession } from '../../utils/Session';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from './store'
-import { TLogin } from '../utils/type';
+import { useDispatch, useSelector } from '../store'
+import { TLogin } from '../../utils/type';
 
 export function useAuth() {
     const history = useHistory();

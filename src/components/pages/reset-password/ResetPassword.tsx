@@ -3,7 +3,7 @@ import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import LoadMask from '../../modal/LoadMask';
 import { resetPasswordThunk } from '../../../services/slices/auth';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../services/auth';
+import { useAuth } from '../../../services/hooks/auth';
 import { useDispatch } from '../../../services/store';
 import { useForm } from '../../../services/hooks/useForm';
 import { Button } from '../../Button';

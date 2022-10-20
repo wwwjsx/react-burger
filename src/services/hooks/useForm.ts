@@ -8,5 +8,6 @@ export function useForm(inputValues: any) {
         const { value, name } = el;
         setValues({...values, [name]: value});
     };
+
     return {values, handleChange, setValues};
 }
