@@ -47,10 +47,7 @@ const OrderItemDetails:FC<IFeedDetails> = ({ order, isModal }) => {
     }, [order, burger]);
 
     return (
-        <div className={'pt-5 pr-10 pb-5 pl-10 text_color_primary'} style={{
-            marginRight: 'auto',
-            marginLeft: 'auto'
-        }}>
+        <div className={`${styles.box} text_color_primary`}>
             <div className={'text text_type_main-default text-center mb-6'}>
                 #{order.number}
             </div>

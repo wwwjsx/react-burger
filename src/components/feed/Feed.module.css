@@ -30,9 +30,25 @@
     margin-bottom: 8px;
     font-family: Iceland;
     font-weight: normal;
-    font-size: 28px;
+    font-size: 24px;
     line-height: .86;
 }
+
+.ready, .pending {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.ready ul, .pending ul {
+    margin-right: 15px;
+}
+
+.ready ul:last-child, .pending ul:last-child {
+    margin-right: 0;
+}
+
+
 
 .ready li {
     color: #00CCCC;

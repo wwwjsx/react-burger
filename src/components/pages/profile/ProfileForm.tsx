@@ -2,13 +2,13 @@ import React, {FC, SyntheticEvent, useEffect, useState } from 'react';
 import { Input, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import LoadMask from '../../modal/LoadMask';
 import { setAuthError, updateUserThunk } from '../../../services/slices/auth';
-import { getCookie } from '../../../utils/Cookie';
 import { useAuth } from '../../../services/hooks/auth';
 import { useForm } from '../../../services/hooks/useForm';
 import { useDispatch } from '../../../services/store';
 import { Button } from '../../Button';
 import styles from './Profile.module.css';
 import ProfileNav from './ProfileNav';
+import { TTokenString } from '../../../utils/type';
 
 const ProfileForm:FC = () => {
     const dispatch = useDispatch();
@@ -31,28 +31,20 @@ const ProfileForm:FC = () => {
         setValues({ ...user, password: ''});
     };
 
-    const handleSubmit = async (e:SyntheticEvent) => {
+    const handleSubmit = (e:SyntheticEvent) => {
         e.preventDefault();
 
-        let accessToken = getCookie('accessToken');
+        auth.refreshCallback((token: TTokenString) => {
+            if (!token) {
+                dispatch(setAuthError('Incorrect access token'));
+                return;
+            }
 
-        if (!accessToken) {
-            const refresh = await auth.refresh();
-
-            // refresh access token if token was expired
-            accessToken = refresh.accessToken;
-        }
-
-        // if never we can't get access token
-        if (!accessToken) {
-            dispatch(setAuthError('Incorrect access token'));
-            return;
-        }
-
-        dispatch(updateUserThunk({
-            token: accessToken,
-            body: {...values}
-        }));
+            dispatch(updateUserThunk({
+                token: token,
+                body: {...values}
+            }));
+        });
     };
 
     return (
@@ -69,22 +61,22 @@ const ProfileForm:FC = () => {
                     <div className={'form-field mb-6'}>
                         <Input
                             value={values.name}
-                            placeholder={'Имя'}
+                            placeholder='Имя'
                             onChange={handleChange}
-                            name={'name'}
+                            name='name'
                         />
                     </div>
                     <div className={'form-field mb-6'}>
                         <EmailInput
                             value={values.email}
                             onChange={handleChange}
-                            name={'email'}
+                            name='email'
                         />
                     </div>
                     <div className={`form-field mb-20`}>
                         <PasswordInput
                             value={values.password}
-                            name={'password'}
+                            name='password'
                             onChange={handleChange}
                         />
                     </div>

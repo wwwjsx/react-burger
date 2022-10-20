@@ -3,9 +3,8 @@ import { useDispatch, useSelector } from '../store';
 import {useEffect, useMemo} from 'react';
 import { cleanToken } from '../../utils/helper';
 import { orderHistoryActions } from '../slices/orderHistory';
-import { getCookie } from '../../utils/Cookie';
 import { useParams } from 'react-router-dom';
-import { TOrderItem } from '../../utils/type';
+import { TOrderItem, TTokenString } from '../../utils/type';
 import { WS_ORDERS_URL } from '../constants/common';
 
 export function useOrderHistory() {
@@ -18,28 +17,17 @@ export function useOrderHistory() {
     }, [orderHistory.orders]);
 
     useEffect(() => {
-        // web socket connect with token
-        const wsConnect = (token:string) => {
-            const accessToken = cleanToken(token);
-            const ws = orderHistoryActions.wsInit({
-                url: `${WS_ORDERS_URL}?token=${accessToken}`,
-                sliceName: 'order/history'
-            });
-            dispatch(ws);
-        };
-
         if (!order) {
-            let accessToken = getCookie('accessToken');
-
-            if (accessToken) {
-                wsConnect(accessToken);
-            } else {
-                const refresh = async () => {
-                    const result = await auth.refresh();
-                    wsConnect(result.accessToken);
-                };
-                refresh();
-            }
+            auth.refreshCallback((token: TTokenString) => {
+                if (token) {
+                    const accessToken = cleanToken(token);
+                    const ws = orderHistoryActions.wsInit({
+                        url: `${WS_ORDERS_URL}?token=${accessToken}`,
+                        sliceName: 'order/history'
+                    });
+                    dispatch(ws);
+                }
+            });
         }
 
         return () => {

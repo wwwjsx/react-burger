@@ -1,6 +1,6 @@
 import styles from './Profile.module.css';
 import { Link } from 'react-router-dom';
-import React, {SyntheticEvent, FC } from 'react';
+import React, {SyntheticEvent, FC, useMemo} from 'react';
 import { useAuth } from '../../../services/hooks/auth';
 
 interface IProfileNav {
@@ -11,11 +11,18 @@ const ProfileNav:FC<IProfileNav> = ({ active }) => {
     const auth = useAuth();
     const nav = [{
         to: '/profile',
-        text: 'Профиль'
+        text: 'Профиль',
+        desc: 'В этом разделе вы можете изменить свои персональные данные'
     }, {
         to: '/profile/orders',
-        text: 'История заказов'
+        text: 'История заказов',
+        desc: 'В этом разделе вы можете посмотреть свою историю заказов'
     }];
+
+    const desc = useMemo(() => {
+        const navItem = nav.find(item => item.to === active);
+        return navItem ? navItem.desc : '';
+    }, [active]);
 
     // handle user logout
     const handleLogout = (e:SyntheticEvent) => {
@@ -39,7 +46,7 @@ const ProfileNav:FC<IProfileNav> = ({ active }) => {
             </ul>
 
             <div className={'text text_type_main-default text_color_inactive'}>
-                В этом разделе вы можете изменить свои персональные данные
+                {desc}
             </div>
         </div>
     )

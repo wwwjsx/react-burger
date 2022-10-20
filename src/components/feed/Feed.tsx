@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, {FC, useCallback} from 'react';
 import styles from './Feed.module.css';
 import OrderItem from '../order/OrderItem';
 import LoadMask from '../modal/LoadMask';
@@ -7,6 +7,34 @@ import { useFeed } from '../../services/hooks/feed';
 
 const Feed:FC = () => {
     const { feed } = useFeed();
+    const orders = useCallback((status:string[], maxRow:number = 10, maxCol:number = 3) => {
+        const filtered = feed.orders.filter(order => status.includes(order.status));
+        let group: TOrderItem[][] = [];
+
+        for (let i = 0, j = 0; i < filtered.length; i++) {
+            if (i >= maxRow && i % maxRow === 0) {
+                j++;
+            }
+
+            group[j] = group[j] || [];
+            // @ts-ignore
+            group[j].push(filtered[i]);
+        }
+
+        return group.map((item:TOrderItem[], index: number) => {
+            if (index < maxCol) {
+                return (
+                    <ul key={index}>
+                        {item.map((child:TOrderItem, childIndex: number) => {
+                            return <li key={`${index}-${childIndex}`}>{child.number}</li>
+                        })}
+                    </ul>
+                );
+            }
+            return null;
+        });
+
+    }, [feed.orders]);
 
     if (feed.request) {
         return <LoadMask> Загрузка лента заказов ...</LoadMask>;
@@ -31,28 +59,18 @@ const Feed:FC = () => {
                         <div className={'text text_type_main-medium pb-6'}>
                             Готовы:
                         </div>
-                        <ul className={styles.ready}>
-                            {feed.orders.map((item: any, index: number) => {
-                                if (index < 5 && item.status === IS_DONE) {
-                                    return <li key={item._id}>{item.number}</li>;
-                                }
-                                return null;
-                            })}
-                        </ul>
+                        <div className={styles.ready}>
+                            {orders([IS_DONE])}
+                        </div>
                     </div>
                     <div className={'col-split-mini'}></div>
                     <div className={'col'}>
                         <div className={'text text_type_main-medium pb-6'}>
                             В работе:
                         </div>
-                        <ul>
-                            {feed.orders.map((item: TOrderItem, index: number) => {
-                                if (index < 5 && (item.status === IS_PENDING || item.status === IS_CREATED)) {
-                                    return <li key={item._id}>{item.number}</li>;
-                                }
-                                return null;
-                            })}
-                        </ul>
+                        <div className={styles.pending}>
+                            {orders([IS_PENDING, IS_CREATED])}
+                        </div>
                     </div>
                 </div>
 

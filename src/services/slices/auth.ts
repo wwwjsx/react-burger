@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {AnyAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {
     loginApi,
     logoutApi,
@@ -150,7 +150,7 @@ const pending = (state:TAuthState) => {
     state.message = null;
 };
 
-const rejected = (state:TAuthState, action: any) => {
+const rejected = (state:TAuthState, action: AnyAction) => {
     state.request = false;
     state.message = action.payload;
     state.failed = true;

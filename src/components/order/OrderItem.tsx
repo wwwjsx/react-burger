@@ -20,10 +20,10 @@ const OrderItem:FC<IOrderItem> = ({ order, isStatus }) => {
         const images:TIngredient[] = [];
 
         order.ingredients.forEach((id) => {
-            const find = burger.ingredients.find((ingredient) => ingredient._id === id);
+            const ingredient = burger.ingredients.find((ingredient) => ingredient._id === id);
 
-            if (find) {
-                const clone = {...find};
+            if (ingredient) {
+                const clone = {...ingredient};
                 const image = images.find((item:TIngredient) => item._id === id);
 
                 price += clone.price;

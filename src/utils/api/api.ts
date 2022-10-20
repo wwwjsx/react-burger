@@ -47,7 +47,6 @@ export const ingredientsApi = () => {
 };
 
 export const orderApi = (params:TToken & { body: TOrdersIngredients }) => {
-    console.log('ORDER API:', params);
     return request(ORDERS_URL, auth('POST', params));
 };
 

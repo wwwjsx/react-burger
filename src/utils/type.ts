@@ -12,6 +12,8 @@ export type TLogin = {
     password: string;
 };
 
+export type TTokenString = string | null | undefined;
+
 export type TLogout = {
     token: string | null;
 };
@@ -120,4 +122,13 @@ export type TOrderItem = {
     createdAt:string;
     updatedAt:string;
     price: number;
+}
+
+export type TOrderInitialState = {
+    request: boolean,
+    connected: boolean,
+    orders: TOrderItem[],
+    total: number,
+    totalToday: number,
+    error: string | null | undefined
 }

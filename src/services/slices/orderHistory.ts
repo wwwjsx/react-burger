@@ -1,6 +1,7 @@
 import { createWsOrdersSlice } from './wsOrders';
+import { TOrderInitialState } from '../../utils/type';
 
-const initialState = {
+const initialState:TOrderInitialState = {
     request: false,
     connected: false,
     orders: [],
