@@ -1,10 +1,7 @@
 import {
     createAsyncThunk,
     createSlice,
-    PayloadAction,
-    createAction,
-    CaseReducerActions,
-    AsyncThunkAction, AnyAction
+    PayloadAction
 } from '@reduxjs/toolkit';
 import { orderApi } from '../../utils/api/api';
 import { TOrdersIngredients, TOrdersIngredientsState, TToken} from '../../utils/type';
@@ -53,10 +50,13 @@ const orderSlice = createSlice({
                 state.failed = false;
                 state.message = null;
             })
-            .addCase(orderThunk.rejected, (state: TOrdersIngredientsState, action: AnyAction) => {
+            .addCase(orderThunk.rejected, (state: TOrdersIngredientsState, action: PayloadAction<unknown>) => {
                 state.request = false;
                 state.failed = true;
-                state.message = action.payload;
+
+                if (typeof action.payload === 'string') {
+                    state.message = action.payload;
+                }
             });
     }
 });

@@ -13,6 +13,6 @@ export const GET_USER_URL = `${BASE_API}/auth/user`;
 export const BUN_TYPE = 'bun';
 export const SORT_COMPONENT_DRAG_TYPE = 'component';
 export const MOVE_COMPONENT_DRAG_TYPE = 'ingredient';
-export const COOKIE_ACCESS_TOKEN_EXPIRE = 60; // 20 minutes
+export const COOKIE_ACCESS_TOKEN_EXPIRE = 20 * 60; // 20 minutes
 export const BASE_WS_URL = 'wss://norma.nomoreparties.space';
 export const WS_ORDERS_URL = `${BASE_WS_URL}/orders`;

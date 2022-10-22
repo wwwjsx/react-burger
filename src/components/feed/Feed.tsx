@@ -7,7 +7,7 @@ import { useFeed } from '../../services/hooks/feed';
 
 const Feed:FC = () => {
     const { feed } = useFeed();
-    const orders = useCallback((status:string[], maxRow:number = 10, maxCol:number = 3) => {
+    const showOrders = useCallback((status:string[], maxRow:number = 10, maxCol:number = 3) => {
         const filtered = feed.orders.filter(order => status.includes(order.status));
         let group: TOrderItem[][] = [];
 
@@ -60,7 +60,7 @@ const Feed:FC = () => {
                             Готовы:
                         </div>
                         <div className={styles.ready}>
-                            {orders([IS_DONE])}
+                            {showOrders([IS_DONE])}
                         </div>
                     </div>
                     <div className={'col-split-mini'}></div>
@@ -69,7 +69,7 @@ const Feed:FC = () => {
                             В работе:
                         </div>
                         <div className={styles.pending}>
-                            {orders([IS_PENDING, IS_CREATED])}
+                            {showOrders([IS_PENDING, IS_CREATED])}
                         </div>
                     </div>
                 </div>

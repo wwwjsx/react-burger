@@ -54,7 +54,7 @@ export function useAuth() {
         });
     };
 
-    const refreshCallback = (callback:any, force?:boolean) => {
+    const refreshCallback = (callback: (token:string | null) => void, force?:boolean) => {
         let token: TTokenString = accessToken;
 
         // if access token exists - OK
