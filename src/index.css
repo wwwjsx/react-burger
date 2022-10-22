@@ -40,6 +40,10 @@ a {
   width: 40px;
 }
 
+.col-split-mini {
+  width: 36px;
+}
+
 .text-left {
   text-align: left;
 }
@@ -56,6 +60,10 @@ a {
   color: #ff0000;
 }
 
+.text-info {
+  color: #00CCCC;
+}
+
 .display-flex {
   display: flex;
 }
@@ -64,13 +72,24 @@ a {
   color: #4C4CFF;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 /* form wrapper for login, register, forgot-password, reset-password */
-.form-wrapper {
+.form-wrapper, .box-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
   align-items: center;
+  overflow: hidden;
+}
+
+.box-inner {
+  width: 780px;
+  display: flex;
+  overflow: auto;
 }
 
 .form-box {
@@ -79,4 +98,18 @@ a {
 
 .form-field .input_size_default {
   width: 480px;
+}
+
+.align-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.price-icon {
+  display: inline-flex;
+  justify-content: flex-end;
+  text-align: right;
+  align-items: center;
 }

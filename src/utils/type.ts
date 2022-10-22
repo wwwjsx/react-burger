@@ -1,5 +1,6 @@
 export type LocationState = {
     ingredient?: TIngredient;
+    order?: TOrderItem;
     from?: string;
     state: any;
 }
@@ -10,6 +11,8 @@ export type TLogin = {
     email: string;
     password: string;
 };
+
+export type TTokenString = string | null | undefined;
 
 export type TLogout = {
     token: string | null;
@@ -53,7 +56,7 @@ export type TUpdateUser = TToken & {
     body: any;
 }
 
-export type TOrders = {
+export type TOrdersIngredients = {
     ingredients: string[]
 };
 
@@ -77,7 +80,6 @@ export type TIngredientUid = TIngredient & { uuid: string };
 export type TIngredientIndex = TIngredientUid & { index: number };
 export type TIngredients = TIngredient[];
 export type TIngredientsUid = TIngredientUid[];
-export type TIngredientsIndex = TIngredientIndex[];
 
 export type TBurgerState = {
     ingredients: TIngredientsUid,
@@ -93,15 +95,40 @@ export type TIngredientsState = {
     failed: boolean
 };
 
-export type TOrder = {
+export type TIngredientOrder = {
     number: number;
 }
 
-export type TOrderState = {
+export type TOrdersIngredientsState = {
     order: null | {
         number: number
     },
     request: boolean,
     message: string | null,
     failed: boolean
+}
+
+export const IS_DONE = 'done';
+export const IS_PENDING = 'pending';
+export const IS_CREATED = 'created';
+export type TStatus = typeof IS_DONE | typeof IS_PENDING | typeof IS_CREATED;
+
+export type TOrderItem = {
+    _id: string;
+    ingredients: (string | TIngredient | TOrdersIngredients)[];
+    status: TStatus;
+    number: number;
+    name: string;
+    createdAt:string;
+    updatedAt:string;
+    price: number;
+}
+
+export type TOrderInitialState = {
+    request: boolean,
+    connected: boolean,
+    orders: TOrderItem[],
+    total: number,
+    totalToday: number,
+    error: string | null | undefined
 }

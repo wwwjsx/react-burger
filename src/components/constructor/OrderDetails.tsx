@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import styles from './OrderDetails.module.css';
 import checkIcon from '../../images/graphicsicon.png';
-import { TOrder } from '../../utils/type';
+import { TIngredientOrder } from '../../utils/type';
 
 interface IOrderDetails {
-    order: TOrder | null;
+    order: TIngredientOrder | null;
 }
 
 const OrderDetails:FC<IOrderDetails> = ({ order }) => {

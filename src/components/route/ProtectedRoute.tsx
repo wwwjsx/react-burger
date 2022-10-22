@@ -1,10 +1,11 @@
 import {Redirect, Route, useLocation} from 'react-router-dom';
-import { useAuth } from '../../services/auth';
+import { useAuth } from '../../services/hooks/auth';
 import { FC, ReactNode } from 'react';
 
 interface IProtectedRoute {
     children: ReactNode,
-    path: string
+    path: string,
+    exact?: boolean
 }
 
 const ProtectedRoute:FC<IProtectedRoute> = ({ children, ...props }) => {

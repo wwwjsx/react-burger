@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
     loginApi,
     logoutApi,
@@ -10,7 +10,7 @@ import {
     tokenApi
 } from '../../utils/api/api';
 import { removeCookie, setCookie} from '../../utils/Cookie';
-import { COOKIE_ACCESS_TOKEN_EXPIRE } from '../../utils/common/Contstants';
+import { COOKIE_ACCESS_TOKEN_EXPIRE } from '../constants/common';
 import { getSession, removeSession, setSession } from '../../utils/Session';
 import {
     TAuthState,
@@ -150,26 +150,28 @@ const pending = (state:TAuthState) => {
     state.message = null;
 };
 
-const rejected = (state:TAuthState, action: any) => {
+const rejected = (state:TAuthState, action: PayloadAction<unknown>) => {
     state.request = false;
-    state.message = action.payload;
+    state.message = action.payload as string || null;
     state.failed = true;
 };
 
+const initialState: TAuthState = {
+    accessToken: null,
+    refreshToken: null,
+    user: null,
+    request: false,
+    message: null,
+    failed: false,
+}
+
 const authSlice = createSlice({
     name: 'user-auth',
-    initialState: {
-        accessToken: null,
-        refreshToken: null,
-        user: null,
-        request: false,
-        message: null,
-        failed: false,
-    },
+    initialState,
     reducers: {
-        setAuthError(state, action) {
+        setAuthError(state, action: PayloadAction<unknown>) {
             state.failed = true;
-            state.message = action.payload;
+            state.message = action.payload as string || null;
             state.request = false;
         },
     },
@@ -177,7 +179,7 @@ const authSlice = createSlice({
         builder
             // login
             .addCase(loginThunk.pending, pending)
-            .addCase(loginThunk.fulfilled, (state, action) => {
+            .addCase(loginThunk.fulfilled, (state: TAuthState, action: PayloadAction<TAuthState>) => {
                 const { user, accessToken, refreshToken } = action.payload;
                 state.user = user;
                 state.accessToken = accessToken;
@@ -189,7 +191,7 @@ const authSlice = createSlice({
             .addCase(loginThunk.rejected, rejected)
             // register
             .addCase(registerThunk.pending, pending)
-            .addCase(registerThunk.fulfilled, (state, action) => {
+            .addCase(registerThunk.fulfilled, (state: TAuthState, action: PayloadAction<TAuthState>) => {
                 const { user, accessToken, refreshToken } = action.payload;
                 state.user = user;
                 state.accessToken = accessToken;
@@ -201,7 +203,7 @@ const authSlice = createSlice({
             .addCase(registerThunk.rejected, rejected)
             // reset password
             .addCase(resetPasswordThunk.pending, pending)
-            .addCase(resetPasswordThunk.fulfilled, (state, action) => {
+            .addCase(resetPasswordThunk.fulfilled, (state: TAuthState) => {
                 state.request = false;
                 state.message = null;
                 state.failed = false;
@@ -209,7 +211,7 @@ const authSlice = createSlice({
             .addCase(resetPasswordThunk.rejected, rejected)
             // forgot password
             .addCase(forgotPasswordThunk.pending, pending)
-            .addCase(forgotPasswordThunk.fulfilled, (state, action) => {
+            .addCase(forgotPasswordThunk.fulfilled, (state: TAuthState) => {
                 state.request = false;
                 state.message = null;
                 state.failed = false;
@@ -217,7 +219,7 @@ const authSlice = createSlice({
             .addCase(forgotPasswordThunk.rejected, rejected)
             // user info
             .addCase(userThunk.pending, pending)
-            .addCase(userThunk.fulfilled, (state, action) => {
+            .addCase(userThunk.fulfilled, (state: TAuthState, action: PayloadAction<TAuthState>) => {
                 const { user, accessToken, refreshToken } = action.payload;
                 state.user = user;
                 state.accessToken = accessToken;
@@ -229,7 +231,7 @@ const authSlice = createSlice({
             .addCase(userThunk.rejected, rejected)
             // update user info
             .addCase(updateUserThunk.pending, pending)
-            .addCase(updateUserThunk.fulfilled, (state, action) => {
+            .addCase(updateUserThunk.fulfilled, (state: TAuthState, action: PayloadAction<TAuthState>) => {
                 const { user, accessToken, refreshToken } = action.payload;
                 state.user = user;
                 state.accessToken = accessToken;
@@ -241,7 +243,7 @@ const authSlice = createSlice({
             .addCase(updateUserThunk.rejected, rejected)
             // logout
             .addCase(logoutThunk.pending, pending)
-            .addCase(logoutThunk.fulfilled, (state, action) => {
+            .addCase(logoutThunk.fulfilled, (state: TAuthState) => {
                 removeSession('refreshToken');
                 removeCookie('accessToken');
 
@@ -255,7 +257,7 @@ const authSlice = createSlice({
             .addCase(logoutThunk.rejected, rejected)
             // token
             .addCase(tokenThunk.pending, pending)
-            .addCase(tokenThunk.fulfilled, (state, action) => {
+            .addCase(tokenThunk.fulfilled, (state: TAuthState) => {
                 state.request = false;
                 state.message = null;
                 state.failed = false;

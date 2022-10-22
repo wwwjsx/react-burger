@@ -1,7 +1,7 @@
 import React, { FC, SyntheticEvent } from 'react';
 import { EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../services/auth';
+import { useAuth } from '../../../services/hooks/auth';
 import LoadMask from '../../modal/LoadMask';
 import { useForm } from '../../../services/hooks/useForm';
 import { LocationState } from '../../../utils/type';

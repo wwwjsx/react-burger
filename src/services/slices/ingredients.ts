@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ingredientsApi } from '../../utils/api/api';
-import { BUN_TYPE } from '../../utils/common/Contstants';
+import { BUN_TYPE } from '../../services/constants/common';
 import {
     SET_INGREDIENT_COUNT_BUN,
     ADD_INGREDIENT_COUNT,
     REMOVE_INGREDIENT_COUNT
-} from '../actions/ingredients';
+} from '../constants/ingredients';
 import { TIngredientsState } from '../../utils/type';
 
 export const ingredientsThunk = createAsyncThunk(

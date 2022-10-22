@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import styles from './Ingredient.module.css';
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
-import { MOVE_COMPONENT_DRAG_TYPE } from '../../utils/common/Contstants';
+import { MOVE_COMPONENT_DRAG_TYPE } from '../../services/constants/common';
 import { TIngredient } from '../../utils/type';
 
 interface IIngredient {

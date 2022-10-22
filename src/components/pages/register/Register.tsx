@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import LoadMask from '../../modal/LoadMask';
 import { useDispatch} from '../../../services/store';
 import { registerThunk } from '../../../services/slices/auth';
-import { useAuth } from '../../../services/auth';
+import { useAuth } from '../../../services/hooks/auth';
 import { useForm } from '../../../services/hooks/useForm';
 import { Button } from '../../Button';
 

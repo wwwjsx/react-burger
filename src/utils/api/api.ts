@@ -1,6 +1,6 @@
 import { checkResponse } from '../Response';
 import {
-    TOrders, TUpdateUser, TLogin, TLogout, TToken,
+    TOrdersIngredients, TLogin, TLogout, TToken,
     TRegister, TResetPassword, TForgotPassword, TUser, TMethods
 } from '../type';
 import {
@@ -9,7 +9,7 @@ import {
     REGISTER_URL,
     RESET_PASSWORD_RESET_URL,
     RESET_PASSWORD_URL, TOKEN_URL
-} from '../common/Contstants';
+} from '../../services/constants/common';
 
 const post = (params: {}): object => {
     return {
@@ -46,8 +46,8 @@ export const ingredientsApi = () => {
     return request(INGREDIENTS_URL);
 };
 
-export const orderApi = (params:TOrders) => {
-    return request(ORDERS_URL, post(params));
+export const orderApi = (params:TToken & { body: TOrdersIngredients }) => {
+    return request(ORDERS_URL, auth('POST', params));
 };
 
 export const userApi = (params:TUser) => {
