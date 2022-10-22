@@ -1,4 +1,4 @@
-import {AnyAction, createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
     loginApi,
     logoutApi,
@@ -10,7 +10,7 @@ import {
     tokenApi
 } from '../../utils/api/api';
 import { removeCookie, setCookie} from '../../utils/Cookie';
-import { COOKIE_ACCESS_TOKEN_EXPIRE } from '../../services/constants/common';
+import { COOKIE_ACCESS_TOKEN_EXPIRE } from '../constants/common';
 import { getSession, removeSession, setSession } from '../../utils/Session';
 import {
     TAuthState,
