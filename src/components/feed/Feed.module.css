@@ -37,7 +37,7 @@
 .ready, .pending {
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
 .ready ul, .pending ul {
