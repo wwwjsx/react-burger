@@ -32,7 +32,7 @@ const ElementBun:FC<IElementBun> = ({ item, type, isHover }) => {
     }
 
     return item ? (
-        <div className={cls}>
+        <div className={cls} data-ref-type='ingredient' data-ref-price={item.price}>
             <div className={styles.elementIcon}></div>
             <ConstructorElement
                 type={type}

@@ -9,7 +9,7 @@ const AppHeader:FC = () => {
     const path = pathname || '/';
 
     const isActive = useCallback((part:string) => {
-        const regEx = new RegExp(`^\/${part}`, 'i');
+        const regEx = new RegExp(`^\\/${part}`, 'i');
         return path === part || path.match(regEx);
     }, [path]);
 

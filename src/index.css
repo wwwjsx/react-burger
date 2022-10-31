@@ -113,3 +113,7 @@ a {
   text-align: right;
   align-items: center;
 }
+
+.pointer {
+  cursor: pointer;
+}

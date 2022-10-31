@@ -62,7 +62,7 @@ const OrderItem:FC<IOrderItem> = ({ order, isStatus }) => {
             items,
             price
         }
-    }, [order.ingredients]);
+    }, [order.ingredients, burger.ingredients]);
 
     return (
         <div className={styles.block}>

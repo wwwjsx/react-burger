@@ -10,7 +10,7 @@ const Main:FC = () => {
     return (
         <React.Fragment>
             <DndProvider backend={HTML5Backend}>
-                <div className={`container ${styles.container}`}>
+                <div className={`container ${styles.container}`} data-testid='main'>
                     <BurgerIngredients/>
                     <div className={'col-split'}></div>
                     <BurgerConstructor/>

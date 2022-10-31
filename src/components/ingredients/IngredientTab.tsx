@@ -18,7 +18,7 @@ const IngredientTab:FC<IIngredientTab> = ({ ingredients, title, reference, type,
             <h2 className="text text_type_main-medium mb-6" ref={reference}>
                 {title}
             </h2>
-            <div className={styles.box}>
+            <div className={styles.box} data-testid={`ingredients-${type}`}>
                 {ingredients.filter(item => item.type === type)
                     .map((item) => {
                         return (

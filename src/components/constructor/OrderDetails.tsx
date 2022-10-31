@@ -10,14 +10,14 @@ interface IOrderDetails {
 const OrderDetails:FC<IOrderDetails> = ({ order }) => {
     return (
         <div className={styles.content}>
-            <div className={'text text_type_digits-large text_color_primary mb-8'}>
+            <div className={'text text_type_digits-large text_color_primary mb-8'} data-testid='order-number'>
                 {order && order.number}
             </div>
             <div className={'text text_type_main-medium text_color_primary mb-15'}>
                 идентификатор заказа
             </div>
             <div className={`${styles.checkIcon} text_color_primary mb-15`}>
-                <img src={checkIcon}/>
+                <img alt='' src={checkIcon}/>
             </div>
             <div className={'text text_type_main-default text_color_primary mb-2'}>
                 Ваш заказ начали готовить

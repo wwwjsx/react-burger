@@ -151,11 +151,11 @@ const BurgerConstructor:FC = () => {
         }
 
         return cls
-    }, [isHover, isBunHover]);
+    }, [isHover, isBunHover, burger.ingredients]);
 
     return (
-        <div className={`${styles.column} pt-25`}>
-            <div className={styles.dropBox} ref={dropRef}>
+        <div className={`${styles.column} pt-25`} data-testid='constructor'>
+            <div className={styles.dropBox} ref={dropRef} data-testid='dropBox'>
                 <div className={'mb-4'}>
                     <ElementBun
                         item={burger.bun}
@@ -193,7 +193,10 @@ const BurgerConstructor:FC = () => {
                 { burger.bun && burger.ingredients.length > 0 &&
                     <React.Fragment>
                         <span className={`${styles.price} text text_type_main-medium`}>
-                            {burger.totalPrice} <CurrencyIcon type="primary" />
+                            <span data-testid='order-total-price'>
+                                {burger.totalPrice}
+                            </span>
+                            <CurrencyIcon type="primary" />
                         </span>
                         <Button type="primary" size="large" onClick={handleOrder}>
                             Оформить заказ
