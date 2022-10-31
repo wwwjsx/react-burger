@@ -197,17 +197,17 @@ const authSlice = createSlice({
             .addCase(registerThunk.rejected, rejected)
             // reset password
             .addCase(resetPasswordThunk.pending, pending)
-            .addCase(resetPasswordThunk.fulfilled, (state: TAuthState) => {
+            .addCase(resetPasswordThunk.fulfilled, (state: TAuthState, action: PayloadAction<unknown>) => {
                 state.request = false;
-                state.message = null;
+                state.message = action.payload as string || null;
                 state.failed = false;
             })
             .addCase(resetPasswordThunk.rejected, rejected)
             // forgot password
             .addCase(forgotPasswordThunk.pending, pending)
-            .addCase(forgotPasswordThunk.fulfilled, (state: TAuthState) => {
+            .addCase(forgotPasswordThunk.fulfilled, (state: TAuthState, action: PayloadAction<unknown>) => {
                 state.request = false;
-                state.message = null;
+                state.message = action.payload as string || null;
                 state.failed = false;
             })
             .addCase(forgotPasswordThunk.rejected, rejected)
@@ -221,7 +221,7 @@ const authSlice = createSlice({
             .addCase(updateUserThunk.rejected, rejected)
             // logout
             .addCase(logoutThunk.pending, pending)
-            .addCase(logoutThunk.fulfilled, (state: TAuthState) => {
+            .addCase(logoutThunk.fulfilled, (state: TAuthState, action: PayloadAction<unknown>) => {
                 removeSession('refreshToken');
                 removeCookie('accessToken');
 
@@ -229,13 +229,16 @@ const authSlice = createSlice({
                 state.refreshToken = null;
                 state.user = null;
                 state.request = false;
-                state.message = null;
+                state.message = action.payload as string || null;
                 state.failed = false;
             })
             .addCase(logoutThunk.rejected, rejected)
             // token
             .addCase(tokenThunk.pending, pending)
-            .addCase(tokenThunk.fulfilled, (state: TAuthState) => {
+            .addCase(tokenThunk.fulfilled, (state: TAuthState, action: PayloadAction<TAuthState>) => {
+                const { accessToken, refreshToken } = action.payload;
+                state.accessToken = accessToken;
+                state.refreshToken = refreshToken;
                 state.request = false;
                 state.message = null;
                 state.failed = false;
