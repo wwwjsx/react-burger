@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { ingredientsApi } from '../../utils/api/api';
 import { BUN_TYPE } from '../../services/constants/common';
 import {
@@ -99,9 +99,9 @@ const ingredientsSlice = createSlice({
                 state.failed = false;
                 state.message = null;
             })
-            .addCase(ingredientsThunk.rejected, (state: TIngredientsState, action: any) => {
+            .addCase(ingredientsThunk.rejected, (state: TIngredientsState, action: PayloadAction<unknown>) => {
                 state.request = false;
-                state.message = action.payload;
+                state.message = action.payload as string || null;
                 state.failed = true;
             });
     }

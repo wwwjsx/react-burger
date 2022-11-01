@@ -1,3 +1,8 @@
+/*
+    factory slice for: feed and order history
+    for testing this function see: orderHistory.test.js, feed.test.js
+*/
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TOrderInitialState } from '../../utils/type';
 

@@ -32,7 +32,7 @@ const Login:FC = () => {
     return (
         <div className={`container form-wrapper`}>
             <div className={'form-box'}>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} data-testid='form-login'>
                     <div className="text-center text text_type_main-medium mb-6">
                         Вход
                     </div>

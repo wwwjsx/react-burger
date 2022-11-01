@@ -35,7 +35,7 @@ const Modal:FC<IModal> = (props) => {
             document.removeEventListener('keydown', handleEsc);
         };
 
-    }, []);
+    }, [props]);
 
     // handler for when clicked on modal overlay
     const onClickOverlay = (e:SyntheticEvent) => {
@@ -50,7 +50,7 @@ const Modal:FC<IModal> = (props) => {
     return ReactDOM.createPortal(
         <ModalOverlay onClick={onClickOverlay}>
             <div className={styles.modal} style={{ width, height }}>
-                <span className={closeCls}>
+                <span className={closeCls} data-testid='close'>
                     <CloseIcon type="primary" onClick={props.onClose}/>
                 </span>
                 {props.children}

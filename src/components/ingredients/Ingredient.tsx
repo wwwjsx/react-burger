@@ -29,7 +29,7 @@ const Ingredient:FC<IIngredient> = (props) => {
             data-id={item._id}
             onClick={props.onClick}>
             <div
-                className={`${styles.thumb} ml-4 mr-4`}
+                className={`${styles.thumb} ml-4 mr-4 pointer`}
                 style={{backgroundImage: `url(${item.image})` }}>
                 { typeof item.count === 'number' && item.count > 0 &&
                     <Counter count={item.count} size="default" />
@@ -41,9 +41,9 @@ const Ingredient:FC<IIngredient> = (props) => {
                 </span>
             </div>
             <div className={`${styles.name} text text-center text_type_main-default`}>
-                <a href={'#'} className={'text text_color_primary'}>
+                <span className={'text text_color_primary pointer'}>
                     {item.name}
-                </a>
+                </span>
             </div>
         </div>
     );

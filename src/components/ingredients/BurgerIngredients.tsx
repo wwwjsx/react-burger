@@ -1,4 +1,4 @@
-import React, {FC, MutableRefObject, SyntheticEvent, useRef} from 'react';
+import React, { FC, MutableRefObject, SyntheticEvent } from 'react';
 import styles from './BurgerIngredients.module.css';
 import IngredientTab from './IngredientTab';
 import {useHistory} from "react-router-dom";
@@ -74,7 +74,7 @@ const BurgerIngredients:FC = () => {
     };
 
     return (
-        <div className={styles.column}>
+        <div className={styles.column} data-testid='ingredients'>
             <div className={styles.header}>
                 <h1 className={'text text_type_main-large mb-5'}>
                     Соберите бургер

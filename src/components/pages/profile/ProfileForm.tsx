@@ -1,4 +1,4 @@
-import React, {FC, SyntheticEvent, useEffect, useState } from 'react';
+import React, {FC, SyntheticEvent, useEffect } from 'react';
 import { Input, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import LoadMask from '../../modal/LoadMask';
 import { setAuthError, updateUserThunk } from '../../../services/slices/auth';

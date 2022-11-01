@@ -3,7 +3,7 @@ import { getCookie } from '../../utils/Cookie';
 import { getSession } from '../../utils/Session';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from '../store'
-import {TLogin, TToken, TTokenString} from '../../utils/type';
+import {TLogin, TTokenString} from '../../utils/type';
 
 export function useAuth() {
     const history = useHistory();
@@ -30,13 +30,23 @@ export function useAuth() {
 
             const tokenPayload = tokenResult.payload;
 
+            // invalid token
+            if (!tokenPayload.success) {
+                await dispatch(logoutThunk());
+                return Promise.reject();
+            }
+
             // should refresh user auth data
-            if (tokenPayload  && tokenPayload.success) {
+            if (tokenPayload && tokenPayload.success) {
                 const userResult = await dispatch(userThunk({
                     token: tokenPayload.accessToken
                 }));
 
                 const userPayload = userResult ? userResult.payload : null;
+
+                if (!userPayload.success) {
+                    return Promise.reject();
+                }
 
                 if (userPayload && userPayload.success) {
                     return Promise.resolve({

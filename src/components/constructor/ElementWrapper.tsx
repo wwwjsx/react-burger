@@ -90,6 +90,8 @@ const ElementWrapper:FC<IElementWrapper> = ({ item, handleClose, index, moveCard
             ref={ref}
             className={styles.element}
             data-handler-id={handlerId}
+            data-ref-type='ingredient'
+            data-ref-price={item.price}
             style={{ opacity }}
             onDrop={handleOnDrop}
         >

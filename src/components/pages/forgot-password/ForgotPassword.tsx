@@ -1,4 +1,4 @@
-import React, { FC, SyntheticEvent, useState } from 'react';
+import React, { FC, SyntheticEvent } from 'react';
 import { EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '../../Button';
 import LoadMask from '../../modal/LoadMask';
